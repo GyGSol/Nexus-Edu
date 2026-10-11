@@ -63,18 +63,28 @@ jobs:
             echo "make_latest=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Upload GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: ${{ github.ref_name }}
-          prerelease: ${{ steps.meta.outputs.prerelease == 'true' }}
-          make_latest: ${{ steps.meta.outputs.make_latest == 'true' }}
-          generate_release_notes: true
-          fail_on_unmatched_files: true
-          # Solo patrones que siempre existen tras Verify (blockmap es opcional)
-          files: |
-            dist/*.exe
-            dist/*.yml
+      - name: Recreate GitHub Release (evita Release vacía rota)
+        shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          gh release delete "$TAG" --yes || true
+          PRE=""
+          LATEST_FLAG=""
+          if [[ "$TAG" == *beta* || "$TAG" == *alpha* || "$TAG" == *rc* ]]; then
+            PRE="--prerelease"
+            LATEST_FLAG="--latest=false"
+          else
+            LATEST_FLAG="--latest"
+          fi
+          # Lista explícita (más fiable que globs en Windows)
+          mapfile -t FILES < <(ls dist/*.exe dist/*.yml 2>/dev/null)
+          echo "Subiendo: ${FILES[*]}"
+          test "${#FILES[@]}" -ge 2
+          gh release create "$TAG" "${FILES[@]}" \
+            --title "$TAG" \
+            --generate-notes \
+            $PRE \
+            $LATEST_FLAG
