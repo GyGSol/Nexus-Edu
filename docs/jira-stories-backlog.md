@@ -7,9 +7,9 @@ Estado de creación en Jira: ver sección **Claves creadas** al final (se comple
 
 ### Cierre AGNT 2026-10-11
 
-**Finalizada:** EDU-5…EDU-8, EDU-9…EDU-20 (incl. H13/H14), EDU-3 (obsoleta).
+**Finalizada:** EDU-5…EDU-8, EDU-9…EDU-20 (incl. H13/H14), EDU-22 (H17 update), EDU-3 (obsoleta).
 
-**Windows (EDU-9):** instalador `.exe` generado (cross-build Linux) e **instalado** en PC de prueba; smoke funcional **pendiente**. Ver `docs/export-backup-windows.md`.
+**Windows:** EDU-9 instalador + **EDU-22** auto-update validado (beta → 1.1.0, BD conservada). Ver `docs/actualizar-app-windows.md`.
 
 **Abiertas:** EDU-1 / EDU-2 (madre, En curso); EDU-4 (falta crear estado **RESPUESTA AGNT** en UI — MCP no puede). EDU-3: borrar en UI si aún aparece.
 
@@ -597,31 +597,30 @@ PUERTA: repo:si-aprobado
 **Tipo:** Story  
 **Labels:** `release`, `windows`, `electron-updater`  
 **Clave:** [EDU-22](https://nexus-educacion.atlassian.net/browse/EDU-22)  
-**Estado:** Implementado en repo (v1.1.0); smoke Win en PC pendiente
+**Estado:** Finalizada (smoke Win 2026-10-11: BD conservada)
 
 ### Descripción humana
 
 Como docente en Windows, quiero actualizar Nexus-Edu desde el sidebar sin reinstalar a mano y sin perder evaluaciones; la app descarga la release publicada en GitHub.
 
-Criterios (entregados en código):
+Criterios (entregados y validados):
 
 - Acción **Actualizar app** en sidebar (`AppShell.tsx`)
-- Canal: GitHub Releases [GyGSol/Nexus-Edu](https://github.com/GyGSol/Nexus-Edu) + `electron-updater` + `publish` + workflow tag `v*`
-- SQLite en `userData`; update no toca la BD
+- Canal: GitHub Releases [GyGSol/Nexus-Edu](https://github.com/GyGSol/Nexus-Edu) + `electron-updater` + workflow tag `v*`
+- Smoke: beta `1.1.0-beta.1` → Actualizar → `1.1.0`; SQLite en `userData` intacta
 - Instructivo: [actualizar-app-windows.md](actualizar-app-windows.md)
 
 ```markdown
 ## AGNT
 schema: agnt-v1
 OBJ: menu Actualizar via electron-updater + GitHub Releases; preservar SQLite userData
-CTX: repo GyGSol/Nexus-Edu; NSIS; AppShell; updater.ts; workflow release-windows.yml
-EVOL: v1.1.0 implementado; docs instructivo; falta smoke Win en PC
+CTX: repo GyGSol/Nexus-Edu; NSIS; AppShell; updater.ts; workflow gh release create
+EVOL: smoke Win OK 2026-10-11; BD conservada; EDU-22 Finalizada
 ACT:
-- confirmar Release v1.1.0 publicada (Actions)
-- instalar/actualizar en PC prueba; verificar BD
-DEPS: repo publico recomendado para latest.yml; smoke-win pendiente
-NEXT: RESPUESTA AGNT / Finalizada tras smoke
-SIG: release;windows;electron-updater
+- ninguno (cerrado)
+DEPS: ok
+NEXT: done
+SIG: release;windows;electron-updater;Finalizada
 PUERTA: repo:si-aprobado
 ```
 
@@ -651,7 +650,7 @@ Creado 2026-10-11 vía MCP OAuth `atlassian-nexus-edu` (`gonzalomlopolito@gmail.
 | H14 | EDU-20 | https://nexus-educacion.atlassian.net/browse/EDU-20 · Finalizada |
 | H15 | EDU-17 | https://nexus-educacion.atlassian.net/browse/EDU-17 · Finalizada |
 | H16 | EDU-18 | https://nexus-educacion.atlassian.net/browse/EDU-18 · Finalizada |
-| H17 | EDU-22 | https://nexus-educacion.atlassian.net/browse/EDU-22 |
+| H17 | EDU-22 | https://nexus-educacion.atlassian.net/browse/EDU-22 · Finalizada |
 
 Anclas del board:
 

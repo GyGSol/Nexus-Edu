@@ -2,18 +2,16 @@
 
 Guía rápida para probar Nexus-Edu en Windows (EDU-9 / EDU-11 / EDU-12).
 
-## Estado
+## Estado (2026-10-11)
 
 | Paso | Estado |
 |------|--------|
-| Build Windows (local o GitHub Actions) | OK |
-| Canal de actualización in-app (EDU-22 / v1.1.0+) | Ver [actualizar-app-windows.md](actualizar-app-windows.md) |
-| Instalación en PC Windows (prueba) | Hecha (1.0.0); pasar a 1.1.0 vía setup o Actualizar |
-| Smoke funcional (abrir, alumnos, export, backup) | Pendiente en PC |
+| Build Windows (GitHub Actions / tag `v*`) | OK |
+| Canal actualización in-app (EDU-22) | **OK** — ver [actualizar-app-windows.md](actualizar-app-windows.md) |
+| Smoke Win: beta → Actualizar → 1.1.0 | **OK** — BD conservada |
+| Instalación en PC Windows | En **1.1.0** tras update |
 
-**Actualizaciones:** ver [actualizar-app-windows.md](actualizar-app-windows.md). Para **probar** el botón: instalar a mano [v1.1.0-beta.1](https://github.com/GyGSol/Nexus-Edu/releases/tag/v1.1.0-beta.1) y luego **Actualizar app** → estable [v1.1.0](https://github.com/GyGSol/Nexus-Edu/releases/latest).
-
-La BD está en `%APPDATA%\nexus-edu\data\` y **no** se borra al actualizar.
+La BD está en `%APPDATA%\nexus-edu\data\` y **no** se borra al actualizar (validado en smoke).
 
 ## Build instalable (Windows)
 

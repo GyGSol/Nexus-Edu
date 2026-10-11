@@ -12,9 +12,19 @@ Actualizar (menú o instalador nuevo) **reemplaza solo los archivos de la app**.
 
 Antes de cualquier update importante: sidebar → **Respaldar base**.
 
-## Probar el botón Actualizar (recomendado)
+## Smoke validado (2026-10-11)
 
-La **1.0.0** no tenía updater. Para probar el flujo completo:
+En PC Windows de prueba:
+
+1. Se instaló a mano la beta `1.1.0-beta.1` (vía Drive).
+2. **Actualizar app** → estable **1.1.0**.
+3. **La base de datos se conservó** (alumnos/notas intactos en `%APPDATA%\nexus-edu\data\`).
+
+Ticket: [EDU-22](https://nexus-educacion.atlassian.net/browse/EDU-22) Finalizada.
+
+## Probar el botón Actualizar (repetible)
+
+La **1.0.0** no tenía updater. Flujo de prueba:
 
 1. Cerrar Nexus-Edu.
 2. Descargar e instalar a mano la beta:  
