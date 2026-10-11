@@ -590,6 +590,43 @@ SIG: sugerir-frase-crud
 PUERTA: repo:si-aprobado
 ```
 
+---
+
+## H17 — Actualizar app desde el menú (GitHub Releases)
+
+**Tipo:** Story  
+**Labels:** `release`, `windows`, `electron-updater`  
+**Clave:** [EDU-22](https://nexus-educacion.atlassian.net/browse/EDU-22)  
+**Estado:** Backlog (pendiente aprobación / Lista AGNT)
+
+### Descripción humana
+
+Como docente en Windows, quiero actualizar Nexus-Edu desde el sidebar sin reinstalar a mano y sin perder evaluaciones; la app descarga la release publicada en GitHub.
+
+Criterios:
+
+- Acción **Actualizar** en sidebar (`AppShell.tsx`), junto a Respaldar/Restaurar
+- Canal: GitHub Releases de [GyGSol/Nexus-Edu](https://github.com/GyGSol/Nexus-Edu) + `electron-updater` + `publish` en `electron-builder.yml`
+- SQLite permanece en `userData` (`%APPDATA%\nexus-edu\data\nexus-edu.sqlite`); update no borra ni reseedea
+- Feedback de progreso / error; reinicio controlado tras update
+- Doc breve en [export-backup-windows.md](export-backup-windows.md)
+
+```markdown
+## AGNT
+schema: agnt-v1
+OBJ: menu Actualizar via electron-updater + GitHub Releases; preservar SQLite userData
+CTX: repo GyGSol/Nexus-Edu; NSIS Win; AppShell sidebar; DB userData; sin autoUpdater hoy
+EVOL: remoto git publicado; historia EDU-22/H17; implementacion pendiente
+ACT:
+- agregar electron-updater + publish provider github (GyGSol/Nexus-Edu)
+- IPC + boton Actualizar en AppShell
+- publicar release de prueba y smoke Win (BD intacta)
+- doc en export-backup-windows.md
+DEPS: faltante:GH_TOKEN-o-pat-para-publish; release firmada opcional
+NEXT: Lista AGNT cuando se apruebe implementacion
+SIG: release;windows;electron-updater
+PUERTA: repo:pendiente-aprobacion
+```
 
 ---
 
@@ -617,6 +654,7 @@ Creado 2026-10-11 vía MCP OAuth `atlassian-nexus-edu` (`gonzalomlopolito@gmail.
 | H14 | EDU-20 | https://nexus-educacion.atlassian.net/browse/EDU-20 · Finalizada |
 | H15 | EDU-17 | https://nexus-educacion.atlassian.net/browse/EDU-17 · Finalizada |
 | H16 | EDU-18 | https://nexus-educacion.atlassian.net/browse/EDU-18 · Finalizada |
+| H17 | EDU-22 | https://nexus-educacion.atlassian.net/browse/EDU-22 |
 
 Anclas del board:
 
