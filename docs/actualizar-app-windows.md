@@ -12,37 +12,47 @@ Actualizar (menú o instalador nuevo) **reemplaza solo los archivos de la app**.
 
 Antes de cualquier update importante: sidebar → **Respaldar base**.
 
-## Primera vez (PC que ya tiene 1.0.0 sin botón Actualizar)
+## Probar el botón Actualizar (recomendado)
+
+La **1.0.0** no tenía updater. Para probar el flujo completo:
 
 1. Cerrar Nexus-Edu.
-2. Descargar `nexus-edu-1.1.0-setup.exe` desde la [última Release](https://github.com/GyGSol/Nexus-Edu/releases/latest).
-3. Instalar encima (mismo usuario Windows).
-4. Abrir la app: alumnos y notas deben seguir ahí.
-5. A partir de esta versión, el sidebar tiene **Actualizar app**.
+2. Descargar e instalar a mano la beta:  
+   [`nexus-edu-1.1.0-beta.1-setup.exe`](https://github.com/GyGSol/Nexus-Edu/releases/tag/v1.1.0-beta.1)  
+   (Release **prerelease** — no es “Latest”).
+3. Abrir la app: verificar que alumnos/notas siguen (BD en `%APPDATA%`).
+4. Sidebar → **Actualizar app**.
+5. Debe ofrecer bajar la estable **1.1.0**, descargar, reiniciar.
+6. Tras reinicio, versión **1.1.0** y datos intactos.
 
 Si SmartScreen avisa: *Más información* → *Ejecutar de todas formas*.
 
-## Actualizar desde el menú (1.1.0 en adelante)
+## Uso habitual (ya en 1.1.0+)
 
-1. Abrir Nexus-Edu (versión instalada con NSIS, no el portable suelto).
+1. Abrir Nexus-Edu (instalador NSIS, no el portable suelto).
 2. Sidebar → **Actualizar app**.
 3. Si hay versión nueva: descarga → reinicia sola.
 4. Si ya está al día: mensaje “Ya tenés la última versión…”.
 
-Requisitos: PC con Internet; repo/releases de [GyGSol/Nexus-Edu](https://github.com/GyGSol/Nexus-Edu) accesibles (idealmente **público** para que `electron-updater` lea `latest.yml` sin token embebido).
+Requisitos: Internet; repo [GyGSol/Nexus-Edu](https://github.com/GyGSol/Nexus-Edu) **público** (para leer `latest.yml` sin token en la app).
+
+## Instalar solo la estable (sin probar el salto beta→stable)
+
+1. Cerrar Nexus-Edu.
+2. Descargar `nexus-edu-1.1.0-setup.exe` desde [Latest](https://github.com/GyGSol/Nexus-Edu/releases/latest).
+3. Instalar encima → abrir y verificar datos.
 
 ## Publicar una nueva versión (desarrollo)
 
-1. Subir `version` en `package.json` (semver, p. ej. `1.2.0`).
+1. Subir `version` en `package.json` (semver).
+   - Estable: `1.2.0` → Release + `latest.yml`
+   - Beta de prueba: `1.2.0-beta.1` → prerelease + `beta.yml` (no pisa Latest)
 2. Commit + push a `main`.
-3. Crear y pushear tag: `git tag v1.2.0 && git push origin v1.2.0`.
-4. GitHub Actions (`.github/workflows/release-windows.yml`) hace `pnpm release:win` y publica la Release con:
-   - `nexus-edu-*-setup.exe`
-   - `nexus-edu-*-portable.exe`
-   - `latest.yml` (necesario para el botón Actualizar)
-5. En la PC de prueba: **Actualizar app** o instalar el setup a mano.
+3. Tag: `git tag v1.2.0 && git push origin v1.2.0` (o `v1.2.0-beta.1`).
+4. GitHub Actions (`.github/workflows/release-windows.yml`) publica setup / portable / yml.
+5. En PC: instalar beta a mano para probar, o **Actualizar app** desde una versión anterior.
 
-Publicación local (opcional, requiere `GH_TOKEN` con permiso `repo`):
+Publicación local (opcional, `GH_TOKEN` con `repo`):
 
 ```bash
 export GH_TOKEN=ghp_...
@@ -52,5 +62,5 @@ pnpm release:win
 ## Qué no hacer
 
 - No borrar `%APPDATA%\nexus-edu` al actualizar.
-- No cambiar el `appId` (`com.nexus.edu`) sin migrar datos: Electron usaría otra carpeta.
-- El **portable** no es el canal principal de auto-update; preferir el instalador NSIS.
+- No cambiar el `appId` (`com.nexus.edu`) sin migrar datos.
+- Preferir instalador NSIS; el portable no es el canal principal de auto-update.

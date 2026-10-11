@@ -6,7 +6,7 @@ publish:
   provider: github
   owner: GyGSol
   repo: Nexus-Edu
-  releaseType: release
+  # Sin releaseType fijo: semver con -beta → prerelease (beta.yml); estable → latest.yml
 files:
   - '!**/.vscode/*'
   - '!src/*'
