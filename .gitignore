@@ -1,0 +1,23 @@
+node_modules
+dist
+out
+release
+.eslintcache
+*.log
+.DS_Store
+coverage
+test-results
+playwright-report
+.engram
+.cursor/atlassian-mcp-auth/
+.cursor/notebooklm-mcp-auth/
+.notebooklm/sessions/
+.mcp.json.local
+
+# Planillas locales con PII (el seed canónico está en resources/)
+planilla_base__datos_alumnos 1C. Gise.xlsx
+*.local.xlsx
+.~lock.*
+
+# Artefactos TS locales
+*.tsbuildinfo

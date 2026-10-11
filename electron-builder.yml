@@ -1,0 +1,56 @@
+appId: com.nexus.edu
+productName: Nexus-Edu
+directories:
+  buildResources: build
+files:
+  - '!**/.vscode/*'
+  - '!src/*'
+  - '!electron.vite.config.{js,ts,mjs,cjs}'
+  - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
+  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
+  - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+  - '!e2e/*'
+  - '!vitest.config.*'
+extraResources:
+  - from: resources/planilla_base__datos_alumnos.xlsx
+    to: planilla_base__datos_alumnos.xlsx
+asarUnpack:
+  - '**/node_modules/better-sqlite3/**'
+win:
+  executableName: Nexus-Edu
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+nsis:
+  artifactName: ${name}-${version}-setup.${ext}
+  shortcutName: ${productName}
+  uninstallDisplayName: ${productName}
+  createDesktopShortcut: always
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+portable:
+  artifactName: ${name}-${version}-portable.${ext}
+mac:
+  entitlementsInherit: build/entitlements.mac.plist
+  notarize: false
+dmg:
+  artifactName: ${name}-${version}.${ext}
+linux:
+  target:
+    - AppImage
+    - deb
+  maintainer: Nexus-Edu
+  category: Education
+  syncDesktopName: true
+  desktop:
+    entry:
+      Name: Nexus-Edu
+      Comment: Dashboard de evaluación de alumnos
+      Categories: Education;
+appImage:
+  artifactName: ${name}-${version}.${ext}
+npmRebuild: true

@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "engram": {
+      "command": "/home/magnetico/.local/bin/engram",
+      "args": ["mcp", "--tools=agent", "--project", "nexus-edu"],
+      "env": {
+        "ENGRAM_PROJECT": "nexus-edu",
+        "ENGRAM_DATA_DIR": "/home/magnetico/Nexus/Nexus-Edu/.engram"
+      }
+    },
+    "atlassian-nexus-edu": {
+      "type": "http",
+      "url": "https://mcp.atlassian.com/v2/mcp"
+    },
+    "notebooklm-nexus-edu": {
+      "command": "/home/magnetico/.local/bin/notebooklm-mcp",
+      "args": [],
+      "env": {
+        "NOTEBOOKLM_MCP_CLI_PATH": "/home/magnetico/Nexus/Nexus-Edu/.cursor/notebooklm-mcp-auth",
+        "NLM_PROFILE": "nexus-edu",
+        "NOTEBOOKLM_HL": "es"
+      }
+    }
+  }
+}

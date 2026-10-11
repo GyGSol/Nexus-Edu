@@ -1,0 +1,59 @@
+export const SCHEMA_SQL = `
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE IF NOT EXISTS students (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  enrollment_number TEXT NOT NULL DEFAULT '',
+  birth_date TEXT NOT NULL DEFAULT '',
+  nationality TEXT NOT NULL DEFAULT '',
+  sex TEXT NOT NULL DEFAULT '',
+  age INTEGER,
+  address TEXT NOT NULL DEFAULT '',
+  phone TEXT NOT NULL DEFAULT '',
+  class_group TEXT NOT NULL DEFAULT '1°C',
+  ppi INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS guardians (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  student_id INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  role TEXT NOT NULL,
+  full_name TEXT NOT NULL DEFAULT '',
+  nationality TEXT NOT NULL DEFAULT '',
+  profession TEXT NOT NULL DEFAULT '',
+  dni TEXT NOT NULL DEFAULT ''
+);
+
+CREATE TABLE IF NOT EXISTS assessments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  student_id INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  bimester INTEGER NOT NULL,
+  area TEXT NOT NULL,
+  dimension_key TEXT NOT NULL DEFAULT '',
+  detail_marks TEXT NOT NULL DEFAULT '',
+  grade TEXT NOT NULL DEFAULT '',
+  UNIQUE(student_id, bimester, area, dimension_key)
+);
+
+CREATE TABLE IF NOT EXISTS final_phrases (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  student_id INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+  bimester INTEGER NOT NULL,
+  phrase_code TEXT NOT NULL DEFAULT '',
+  UNIQUE(student_id, bimester)
+);
+
+CREATE TABLE IF NOT EXISTS phrase_catalog (
+  code TEXT PRIMARY KEY,
+  text TEXT NOT NULL DEFAULT '',
+  grade_hint TEXT NOT NULL DEFAULT '',
+  area TEXT NOT NULL DEFAULT ''
+);
+
+CREATE TABLE IF NOT EXISTS meta (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);
+`

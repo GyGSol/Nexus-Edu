@@ -1,0 +1,89 @@
+@import 'tailwindcss';
+@import '@fontsource/literata/400.css';
+@import '@fontsource/literata/600.css';
+@import '@fontsource/literata/700.css';
+@import '@fontsource/dm-sans/400.css';
+@import '@fontsource/dm-sans/500.css';
+@import '@fontsource/dm-sans/600.css';
+@import '@fontsource/dm-sans/700.css';
+
+@theme {
+  --font-display: 'Literata', Georgia, serif;
+  --font-sans: 'DM Sans', ui-sans-serif, sans-serif;
+  --color-tierra-arena: #e8dfd0;
+  --color-tierra-piedra: #d4c4a8;
+  --color-tierra-arcilla: #b85c38;
+  --color-tierra-umbria: #3e2f24;
+  --color-tierra-sombra: #5c4033;
+  --color-tierra-musgo: #5f6b4a;
+  --color-tierra-ocre: #c4a35a;
+  --color-tierra-terracota: #a63d2f;
+  --color-tierra-arena-clara: #f3ede3;
+  --color-tierra-borde: #c9b89a;
+  --color-background: #e8dfd0;
+  --color-foreground: #3e2f24;
+  --color-card: #f3ede3;
+  --color-primary: #b85c38;
+  --color-primary-foreground: #fbf7f0;
+  --color-secondary: #d4c4a8;
+  --color-muted: #d4c4a8;
+  --color-accent: #5f6b4a;
+  --color-destructive: #a63d2f;
+  --color-border: #c9b89a;
+  --color-ring: #b85c38;
+}
+
+:root {
+  --tierra-arena: #e8dfd0;
+  --tierra-piedra: #d4c4a8;
+  --tierra-arcilla: #b85c38;
+  --tierra-umbria: #3e2f24;
+  --tierra-sombra: #5c4033;
+  --tierra-musgo: #5f6b4a;
+  --tierra-ocre: #c4a35a;
+  --tierra-terracota: #a63d2f;
+  --tierra-arena-clara: #f3ede3;
+  --tierra-borde: #c9b89a;
+  --background: var(--tierra-arena);
+  --foreground: var(--tierra-umbria);
+  --card: var(--tierra-arena-clara);
+  --primary: var(--tierra-arcilla);
+  --primary-foreground: #fbf7f0;
+  --secondary: var(--tierra-piedra);
+  --muted: var(--tierra-piedra);
+  --accent: var(--tierra-musgo);
+  --destructive: var(--tierra-terracota);
+  --border: var(--tierra-borde);
+  --ring: var(--tierra-arcilla);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--foreground);
+  background-color: var(--background);
+  background-image:
+    radial-gradient(rgba(62, 47, 36, 0.04) 0.6px, transparent 0.6px),
+    linear-gradient(180deg, #efe6d6 0%, var(--tierra-arena) 40%, #e2d5c0 100%);
+  background-size:
+    4px 4px,
+    auto;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}

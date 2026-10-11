@@ -1,0 +1,47 @@
+---
+description: Proyecto Nexus-Edu — Jira EDU, stack Electron, Engram y MCP Atlassian
+alwaysApply: true
+---
+
+# Nexus-Edu — contexto del agente
+
+## Producto
+
+Dashboard de escritorio para evaluación cualitativa de alumnos (escala D / AV / AL / EP / NO). Repo: `/home/magnetico/Nexus/Nexus-Edu`.
+
+## Jira
+
+| | |
+|--|--|
+| Sitio | `nexus-educacion.atlassian.net` |
+| Board | https://nexus-educacion.atlassian.net/jira/software/projects/EDU/boards/1 |
+| cloudId | `c51efaad-12f4-4cac-88b4-4abfa3cabd81` |
+| Clave | `EDU` |
+| Lead | Gonzalo Lopolito |
+
+### MCP Jira (regla dura)
+
+- Servidor canónico: **`atlassian-nexus-edu`** ([`.cursor/mcp.json`](../mcp.json), OAuth en `.cursor/atlassian-mcp-auth/`).
+- Cuenta: `gonzalomlopolito@gmail.com` · Auth: [docs/jira-mcp-auth.md](../../docs/jira-mcp-auth.md).
+- **Único cloudId válido en este repo:** `c51efaad-12f4-4cac-88b4-4abfa3cabd81` (`nexus-educacion.atlassian.net`).
+- **Prohibido** usar `feelibizaproperties.atlassian.net` / cloudId `ffa44cf1-edb5-40b9-bc22-8c7257a29af4` (Feel Ibiza).
+- El plugin marketplace `plugin-atlassian-atlassian` es global y a menudo solo tiene Feel Ibiza: **no** usarlo para EDU si `getAccessibleAtlassianResources` no lista `nexus-educacion`.
+- Si `atlassian-nexus-edu` está desconectado: Settings → Tools & MCP → habilitar/reconectar **atlassian-nexus-edu** (elegir sitio `nexus-educacion`, no Feel). Ver docs.
+
+## Stack
+
+electron-vite, Electron, React 19, TypeScript 5, Tailwind 4 (paleta Tierra), React Hook Form + Zod, better-sqlite3, electron-builder, Playwright / Vitest.
+
+## Herramientas del agente
+
+- **Engram**: memoria del proyecto (`nexus-edu`).
+- **Jira AGNT**: skills `.cursor/skills/jira-agnt-ticket-unico`, `jira-agnt-bloque-descripcion`, `jira-ticket-intake`.
+- **Dominio**: skill `.cursor/skills/nexus-edu`.
+- **NotebookLM**: MCP **`notebooklm-nexus-edu`** + skills `notebooklm-nexus-edu` / `nlm-skill`. Cuaderno **Nexus-Educación** (`d3b34e36-c736-483b-89e4-0e57eb06e7dc`) con `gonzalomlopolito@gmail.com` — fuente documental solo de este proyecto. Auth: [docs/notebooklm.md](../../docs/notebooklm.md).
+
+## Docs canónicas
+
+- `docs/jira-workflow-edu.md` — estados AGNT (disparo: **Lista AGNT**) y JQL
+- `docs/jira-stories-backlog.md` — historias del backlog
+- `docs/notebooklm.md` — NotebookLM del proyecto (auth, MCP, sync fuentes)
+- JQL: `project = EDU AND status = "Lista AGNT" ORDER BY updated DESC`

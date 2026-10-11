@@ -1,0 +1,13 @@
+{
+  "notebook_id": "d3b34e36-c736-483b-89e4-0e57eb06e7dc",
+  "notebook_title": "Nexus-Educación",
+  "notebook_url": "https://notebook.google.com/notebook/d3b34e36-c736-483b-89e4-0e57eb06e7dc",
+  "google_account": "gonzalomlopolito@gmail.com",
+  "project_path": "/home/magnetico/Nexus/Nexus-Edu",
+  "created_at": "2026-10-11",
+  "scope": "project-only",
+  "auto_sources": ["README.md", "docs/"],
+  "mcp_server": "notebooklm-nexus-edu",
+  "auth_profile": "nexus-edu",
+  "notes": "Fuente de información y documentación exclusiva de Nexus-Edu. No mezclar con otros proyectos."
+}

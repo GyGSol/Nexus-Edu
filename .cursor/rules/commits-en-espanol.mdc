@@ -1,0 +1,20 @@
+---
+description: Commits y PR en español con clave Jira EDU; Engram tras cada commit
+alwaysApply: true
+---
+
+# Commits y PR en español (Nexus-Edu)
+
+Redactar **siempre** mensajes de `git commit` y títulos/descripciones de PR en **español**.
+
+Incluir la **clave Jira** (`EDU-NN`) en la primera línea cuando exista ticket, p. ej. `EDU-1: configura workflow AGNT`.
+
+## Engram tras cada commit
+
+Tras cada commit creado por el agente, `mem_save` en proyecto `nexus-edu`:
+
+- `topic_key`: `nexus-edu/commits/<clave>/<short-hash>-<slug>`
+- Title = asunto del commit
+- Body: Commit, Ticket, What, Why, Where, Refs
+
+Sin PII de alumnos ni secretos.
