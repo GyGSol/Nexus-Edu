@@ -4,6 +4,7 @@ import icon from '../../resources/icon.png?asset'
 import { registerIpcHandlers } from './ipc/handlers'
 import { ensureSeeded } from './db/seed'
 import { closeDb } from './db/connection'
+import { initAutoUpdater } from './services/updater'
 
 const isDev = !app.isPackaged
 
@@ -68,6 +69,7 @@ app.whenReady().then(async () => {
   })
 
   registerIpcHandlers()
+  initAutoUpdater()
   await ensureSeeded()
   createWindow()
 

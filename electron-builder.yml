@@ -2,6 +2,11 @@ appId: com.nexus.edu
 productName: Nexus-Edu
 directories:
   buildResources: build
+publish:
+  provider: github
+  owner: GyGSol
+  repo: Nexus-Edu
+  releaseType: release
 files:
   - '!**/.vscode/*'
   - '!src/*'

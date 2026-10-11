@@ -29,6 +29,11 @@ import {
   exportBoletinHtml,
   printBoletinHtml
 } from '../services/export-boletin'
+import {
+  checkForAppUpdate,
+  downloadAppUpdate,
+  installAppUpdate
+} from '../services/updater'
 
 function assertSender(event: Electron.IpcMainInvokeEvent): void {
   const frame = event.senderFrame
@@ -120,8 +125,24 @@ export function registerIpcHandlers(): void {
     assertSender(event)
     return {
       version: app.getVersion(),
-      dbPath: getDbPath()
+      dbPath: getDbPath(),
+      packaged: app.isPackaged
     }
+  })
+
+  ipcMain.handle('app:checkUpdate', async (event) => {
+    assertSender(event)
+    return checkForAppUpdate()
+  })
+
+  ipcMain.handle('app:downloadUpdate', async (event) => {
+    assertSender(event)
+    return downloadAppUpdate()
+  })
+
+  ipcMain.handle('app:installUpdate', (event) => {
+    assertSender(event)
+    return installAppUpdate()
   })
 
   ipcMain.handle('db:backup', async (event) => {

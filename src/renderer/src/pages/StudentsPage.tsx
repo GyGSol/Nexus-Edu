@@ -15,12 +15,13 @@ export function StudentsPage(): React.JSX.Element {
   const [ppi, setPpi] = useState<'all' | 'si' | 'no'>('all')
   const [status, setStatus] = useState<StudentListFilters['status']>(null)
   const [area, setArea] = useState('')
-  const [bimester, setBimester] = useState('')
+  const [bimester, setBimester] = useState('1')
   const [page, setPage] = useState(1)
   const [sortBy, setSortBy] = useState<StudentListFilters['sortBy']>('lastName')
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc')
   const [error, setError] = useState('')
   const pageSize = 15
+  const phraseBimester = Number(bimester) || 1
 
   const filters = useMemo<StudentListFilters>(
     () => ({
@@ -28,13 +29,13 @@ export function StudentsPage(): React.JSX.Element {
       ppi: ppi === 'all' ? null : ppi === 'si',
       status: status ?? null,
       area: area || null,
-      bimester: bimester ? Number(bimester) : null,
+      bimester: phraseBimester,
       page,
       pageSize,
       sortBy,
       sortDir
     }),
-    [search, ppi, status, area, bimester, page, sortBy, sortDir]
+    [search, ppi, status, area, phraseBimester, page, sortBy, sortDir]
   )
 
   async function load(): Promise<void> {
@@ -67,7 +68,6 @@ export function StudentsPage(): React.JSX.Element {
   }
 
   const pages = Math.max(1, Math.ceil(total / pageSize))
-  const phraseBimester = bimester ? Number(bimester) : 1
 
   function phraseLabel(student: Student): { short: string; full: string } {
     const full = displayFinalPhrase(phraseForBimester(student.finalPhrases, phraseBimester))
@@ -87,8 +87,7 @@ export function StudentsPage(): React.JSX.Element {
           <Button
             variant="outline"
             onClick={() => {
-              const bim = bimester ? Number(bimester) : 1
-              void window.api.exportBoletinExcel(null, bim).then((r) => {
+              void window.api.exportBoletinExcel(null, phraseBimester).then((r) => {
                 if (!r.ok) setError(r.message || 'Exportación cancelada')
                 else setError('')
               })
@@ -149,14 +148,14 @@ export function StudentsPage(): React.JSX.Element {
           value={bimester}
           onChange={(e) => {
             setPage(1)
-            setBimester(e.target.value)
+            setBimester(e.target.value || '1')
           }}
+          aria-label="Bimestre"
         >
-          <option value="">Bimestre</option>
-          <option value="1">1°</option>
-          <option value="2">2°</option>
-          <option value="3">3°</option>
-          <option value="4">4°</option>
+          <option value="1">1° bimestre</option>
+          <option value="2">2° bimestre</option>
+          <option value="3">3° bimestre</option>
+          <option value="4">4° bimestre</option>
         </select>
         <select
           className="h-9 rounded-md border border-tierra-borde bg-tierra-arena-clara px-3 text-sm md:col-span-2"
@@ -174,6 +173,26 @@ export function StudentsPage(): React.JSX.Element {
           ))}
         </select>
       </section>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <Button
+          variant="outline"
+          disabled={page <= 1}
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+        >
+          Atrás
+        </Button>
+        <Button
+          variant="outline"
+          disabled={page >= pages}
+          onClick={() => setPage((p) => Math.min(pages, p + 1))}
+        >
+          Siguiente
+        </Button>
+        <span className="text-sm font-medium text-tierra-umbria">
+          {page}/{pages}
+        </span>
+      </div>
 
       {error ? <p className="text-tierra-terracota">{error}</p> : null}
 
@@ -199,7 +218,7 @@ export function StudentsPage(): React.JSX.Element {
               </th>
               <th className="px-4 py-3 font-semibold">Grupo</th>
               <th className="px-4 py-3 font-semibold">
-                Frase final {bimester ? `(${bimester}°)` : '(1°)'}
+                Frase final ({phraseBimester}°)
               </th>
               <th className="px-4 py-3 font-semibold">Valoración</th>
               <th className="px-4 py-3 text-right font-semibold">Acciones</th>
@@ -233,7 +252,7 @@ export function StudentsPage(): React.JSX.Element {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-1">
-                      <Link to={`/alumnos/${s.id}`}>
+                      <Link to={`/alumnos/${s.id}?bimester=${phraseBimester}`}>
                         <Button variant="ghost" size="icon" aria-label="Editar">
                           <Pencil className="h-4 w-4" />
                         </Button>

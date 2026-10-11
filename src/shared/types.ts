@@ -213,7 +213,16 @@ export type IpcApi = {
   deletePhraseCatalogEntry: (code: string) => Promise<{ success: boolean }>
   getDashboardMetrics: (bimester?: number | null) => Promise<DashboardMetrics>
   importExcel: (mode: 'replace' | 'merge') => Promise<{ imported: number }>
-  getAppInfo: () => Promise<{ version: string; dbPath: string }>
+  getAppInfo: () => Promise<{ version: string; dbPath: string; packaged: boolean }>
+  checkForUpdate: () => Promise<{
+    ok: boolean
+    status: 'available' | 'not-available' | 'dev' | 'error'
+    currentVersion: string
+    version?: string
+    message?: string
+  }>
+  downloadUpdate: () => Promise<{ ok: boolean; message?: string }>
+  installUpdate: () => Promise<{ ok: boolean; message?: string }>
   backupDatabase: () => Promise<{ ok: boolean; path?: string; message?: string }>
   restoreDatabase: () => Promise<{ ok: boolean; message?: string }>
   exportBoletinHtml: (

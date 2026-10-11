@@ -13,10 +13,7 @@ import type {
   StudentListResult
 } from '../../shared/types'
 import { GRADE_RANK, GRADES } from '../../shared/types'
-import {
-  areasCompletasParaBimestre,
-  valoracionFinalStatus
-} from '../../shared/valoracion-final'
+import { valoracionFinalStatus } from '../../shared/valoracion-final'
 import { getDb } from './connection'
 
 type AssessmentRow = {
@@ -172,8 +169,9 @@ export function listStudents(filters: StudentListFilters = {}): StudentListResul
     where.push('ppi = 0')
   }
 
-  // Status / area / bimester filters use assessments (params only when used in SQL)
-  if (filters.status || filters.area || filters.bimester) {
+  // status/area filtran quién aparece; bimestre solo acota ese subquery (no oculta alumnos solo por bimestre).
+  // El bimestre siempre contextualiza frase + valoracionFinalStatus (ver statusBimester abajo).
+  if (filters.status || filters.area) {
     const subWhere: string[] = []
     const subParams: unknown[] = []
     if (filters.bimester) {
@@ -397,31 +395,21 @@ export function upsertAssessment(input: AssessmentUpsertInput): Assessment {
 export function upsertFinalPhrase(input: FinalPhraseUpsertInput): FinalPhrase {
   const db = getDb()
   const code = input.phraseCode.trim()
-  const assessments = loadAssessmentsForStudents([input.studentId], input.bimester).get(
-    input.studentId
-  )
-  const areasDone = areasCompletasParaBimestre(assessments, input.bimester)
 
-  if (areasDone) {
-    if (!code) {
-      throw new Error(
-        'Con todas las dimensiones valoradas, la frase final es obligatoria.'
-      )
-    }
-    const catalog = db
-      .prepare('SELECT text FROM phrase_catalog WHERE code = ?')
-      .get(code) as { text: string } | undefined
-    if (!catalog?.text?.trim()) {
-      throw new Error('El código de frase no está en el catálogo; elegí una frase válida.')
-    }
-  }
-
+  // Vaciar frase siempre permitido: el cierre (completa/incompleta) es indicador, no hard-fail.
   if (!code) {
     db.prepare('DELETE FROM final_phrases WHERE student_id = ? AND bimester = ?').run(
       input.studentId,
       input.bimester
     )
     return { bimester: input.bimester, phraseCode: '', phraseText: '' }
+  }
+
+  const catalog = db
+    .prepare('SELECT text FROM phrase_catalog WHERE code = ?')
+    .get(code) as { text: string } | undefined
+  if (!catalog?.text?.trim()) {
+    throw new Error('El código de frase no está en el catálogo; elegí una frase válida.')
   }
 
   db.prepare(

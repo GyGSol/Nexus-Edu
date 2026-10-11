@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import {
   BookText,
+  CloudDownload,
   DatabaseBackup,
   GraduationCap,
   LayoutDashboard,
@@ -11,6 +12,7 @@ import {
 import { cn } from '../../lib/utils'
 import { Button } from '../ui/button'
 import { useState } from 'react'
+import { StudentEditNavProvider, useStudentEditNav } from './StudentEditNavContext'
 
 const nav = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -19,8 +21,17 @@ const nav = [
 ]
 
 export function AppShell(): React.JSX.Element {
+  return (
+    <StudentEditNavProvider>
+      <AppShellInner />
+    </StudentEditNavProvider>
+  )
+}
+
+function AppShellInner(): React.JSX.Element {
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
+  const { editNav } = useStudentEditNav()
 
   async function handleImport(): Promise<void> {
     setBusy(true)
@@ -65,6 +76,39 @@ export function AppShell(): React.JSX.Element {
     }
   }
 
+  async function handleUpdate(): Promise<void> {
+    setBusy(true)
+    setMessage('')
+    try {
+      const check = await window.api.checkForUpdate()
+      if (check.status === 'dev' || check.status === 'error') {
+        setMessage(check.message || 'No se pudo comprobar actualizaciones')
+        return
+      }
+      if (check.status === 'not-available') {
+        setMessage(check.message || `Ya tenés la última versión (${check.currentVersion}).`)
+        return
+      }
+
+      setMessage(`Descargando ${check.version}… (la base de datos no se modifica)`)
+      const downloaded = await window.api.downloadUpdate()
+      if (!downloaded.ok) {
+        setMessage(downloaded.message || 'Error al descargar')
+        return
+      }
+
+      setMessage(downloaded.message || 'Reiniciando…')
+      const installed = await window.api.installUpdate()
+      if (!installed.ok) {
+        setMessage(installed.message || 'Error al instalar')
+      }
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : 'Error al actualizar')
+    } finally {
+      setBusy(false)
+    }
+  }
+
   return (
     <div className="flex h-full min-h-0">
       <aside className="flex w-60 shrink-0 flex-col border-r border-tierra-borde bg-tierra-piedra/80 px-4 py-6">
@@ -79,25 +123,45 @@ export function AppShell(): React.JSX.Element {
         </div>
         <nav className="flex flex-1 flex-col gap-1">
           {nav.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.to === '/'}
-              className={({ isActive }) =>
-                cn(
-                  'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                  isActive
-                    ? 'bg-tierra-arcilla text-primary-foreground'
-                    : 'text-tierra-umbria hover:bg-tierra-arena/70'
-                )
-              }
-            >
-              <item.icon className="h-4 w-4" />
-              {item.label}
-            </NavLink>
+            <div key={item.to}>
+              <NavLink
+                to={item.to}
+                end={item.to === '/'}
+                className={({ isActive }) =>
+                  cn(
+                    'flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                    isActive
+                      ? 'bg-tierra-arcilla text-primary-foreground'
+                      : 'text-tierra-umbria hover:bg-tierra-arena/70'
+                  )
+                }
+              >
+                <item.icon className="h-4 w-4" />
+                {item.label}
+              </NavLink>
+              {item.to === '/alumnos' && editNav ? (
+                <div className="mt-1 ml-3 border-l border-tierra-borde/80 pl-3">
+                  <p className="truncate text-sm font-medium text-tierra-umbria" title={editNav.displayName}>
+                    {editNav.displayName}
+                  </p>
+                  <p className="mt-0.5 text-xs text-tierra-sombra">
+                    {editNav.bimester}° · {editNav.completa ? 'Completa' : 'Incompleta'}
+                  </p>
+                </div>
+              ) : null}
+            </div>
           ))}
         </nav>
         <div className="mt-4 space-y-2 border-t border-tierra-borde pt-4">
+          <Button
+            variant="secondary"
+            className="w-full justify-start"
+            disabled={busy}
+            onClick={() => void handleUpdate()}
+          >
+            <CloudDownload className={cn('h-4 w-4', busy && 'animate-pulse')} />
+            Actualizar app
+          </Button>
           <Button
             variant="secondary"
             className="w-full justify-start"

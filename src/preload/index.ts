@@ -31,6 +31,9 @@ const api: IpcApi = {
     ipcRenderer.invoke('metrics:dashboard', bimester),
   importExcel: (mode: 'replace' | 'merge') => ipcRenderer.invoke('import:excel', mode),
   getAppInfo: () => ipcRenderer.invoke('app:info'),
+  checkForUpdate: () => ipcRenderer.invoke('app:checkUpdate'),
+  downloadUpdate: () => ipcRenderer.invoke('app:downloadUpdate'),
+  installUpdate: () => ipcRenderer.invoke('app:installUpdate'),
   backupDatabase: () => ipcRenderer.invoke('db:backup'),
   restoreDatabase: () => ipcRenderer.invoke('db:restore'),
   exportBoletinHtml: (studentId: number, bimester: number) =>

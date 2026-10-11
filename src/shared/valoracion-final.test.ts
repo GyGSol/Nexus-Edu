@@ -24,9 +24,11 @@ describe('valoracionFinalStatus', () => {
     expect(areasCompletasParaBimestre(allGraded(1).slice(0, 3), 1)).toBe(false)
   })
 
-  it('is incompleta when dimensions complete but phrase missing', () => {
+  it('is incompleta when dimensions complete but phrase missing (soft indicator, not hard-fail)', () => {
     expect(valoracionFinalStatus(allGraded(1), [], 1)).toBe('incompleta')
     expect(mensajeCierreValoracion(allGraded(1), undefined, 1)).toMatch(/obligatoria/)
+    // Vaciar frase con áreas completas debe quedar incompleta, sin bloquear el write path.
+    expect(fraseFinalValida(undefined)).toBe(false)
   })
 
   it('is incompleta when phrase code has no catalog text', () => {

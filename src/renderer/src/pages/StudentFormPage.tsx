@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { ArrowDown } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -32,6 +33,7 @@ import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import { Badge } from '../components/ui/badge'
+import { useStudentEditNav } from '../components/layout/StudentEditNavContext'
 
 const schema = z.object({
   firstName: z.string().min(1, 'Requerido'),
@@ -57,17 +59,24 @@ const schema = z.object({
 
 type FormValues = z.input<typeof schema>
 
+function parseBimesterParam(raw: string | null): number {
+  const n = Number(raw)
+  return n >= 1 && n <= 4 ? n : 1
+}
+
 export function StudentFormPage(): React.JSX.Element {
   const { id } = useParams()
+  const [searchParams] = useSearchParams()
   const isNew = !id || id === 'nuevo'
   const navigate = useNavigate()
+  const { setEditNav } = useStudentEditNav()
   const [assessments, setAssessments] = useState<Assessment[]>([])
   const [finalPhrases, setFinalPhrases] = useState<FinalPhrase[]>([])
   const [phraseCatalog, setPhraseCatalog] = useState<PhraseCatalogEntry[]>([])
   const [phraseSuggestion, setPhraseSuggestion] = useState<PhraseCatalogEntry | null>(null)
   const [phraseAlternatives, setPhraseAlternatives] = useState<PhraseCatalogEntry[]>([])
   const [suggestRotate, setSuggestRotate] = useState(0)
-  const [bimester, setBimester] = useState(1)
+  const [bimester, setBimester] = useState(() => parseBimesterParam(searchParams.get('bimester')))
   const [message, setMessage] = useState('')
   const [phraseError, setPhraseError] = useState('')
   const [loading, setLoading] = useState(!isNew)
@@ -96,6 +105,10 @@ export function StudentFormPage(): React.JSX.Element {
       padreDni: ''
     }
   })
+
+  useEffect(() => {
+    setBimester(parseBimesterParam(searchParams.get('bimester')))
+  }, [searchParams])
 
   useEffect(() => {
     if (isNew) return
@@ -221,8 +234,7 @@ export function StudentFormPage(): React.JSX.Element {
       saved
     ]
     setAssessments(nextAssessments)
-    const phrase = phraseForBimester(finalPhrases, bimester)
-    setPhraseError(mensajeCierreValoracion(nextAssessments, phrase, bimester) ?? '')
+    setPhraseError('')
   }
 
   async function savePhrase(phraseCode: string): Promise<void> {
@@ -292,27 +304,46 @@ export function StudentFormPage(): React.JSX.Element {
       setPhraseSuggestion(null)
       setPhraseAlternatives([])
       setSuggestRotate(0)
-      const cierre = mensajeCierreValoracion(assessments, undefined, bimester)
-      if (cierre) setPhraseError(cierre)
     } catch (err) {
       setPhraseError(err instanceof Error ? err.message : 'No se pudo limpiar la frase')
     }
   }
 
-  if (loading) return <p className="text-tierra-sombra">Cargando…</p>
-
   const currentPhrase = phraseForBimester(finalPhrases, bimester)
   const phraseDisplay = displayFinalPhrase(currentPhrase)
   const status = valoracionFinalStatus(assessments, finalPhrases, bimester)
-  const cierreMsg =
-    phraseError || mensajeCierreValoracion(assessments, currentPhrase, bimester)
+  const cierreHint = mensajeCierreValoracion(assessments, currentPhrase, bimester)
   const dominantGrade = dominantGradeForBimester(assessments, bimester)
   const studentPpi = form.watch('ppi')
+  const firstName = form.watch('firstName')
+  const lastName = form.watch('lastName')
   const { suggested: suggestedPhrases, other: otherPhrases } = orderPhraseCatalogForContext(
     phraseCatalog,
     dominantGrade,
     Boolean(studentPpi)
   )
+
+  useEffect(() => {
+    if (isNew || loading) {
+      setEditNav(null)
+      return
+    }
+    const last = lastName?.trim() || ''
+    const first = firstName?.trim() || ''
+    const displayName = [last, first].filter(Boolean).join(', ') || `Alumno #${id}`
+    setEditNav({
+      studentId: Number(id),
+      displayName,
+      bimester,
+      completa: status === 'completa'
+    })
+  }, [isNew, loading, id, firstName, lastName, bimester, status, setEditNav])
+
+  useEffect(() => {
+    return () => setEditNav(null)
+  }, [setEditNav])
+
+  if (loading) return <p className="text-tierra-sombra">Cargando…</p>
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
@@ -328,6 +359,19 @@ export function StudentFormPage(): React.JSX.Element {
         <div className="flex flex-wrap gap-2">
           {!isNew ? (
             <>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() =>
+                  document.getElementById('frase-final-section')?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                  })
+                }
+              >
+                <ArrowDown className="h-4 w-4" />
+                Ir a frase final
+              </Button>
               <Button
                 type="button"
                 variant="outline"
@@ -483,12 +527,29 @@ export function StudentFormPage(): React.JSX.Element {
                 setPhraseAlternatives([])
                 setSuggestRotate(0)
               }}
+              aria-label="Bimestre"
             >
               <option value={1}>1° bimestre</option>
               <option value={2}>2° bimestre</option>
               <option value={3}>3° bimestre</option>
               <option value={4}>4° bimestre</option>
             </select>
+          </div>
+          <div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                document.getElementById('frase-final-section')?.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start'
+                })
+              }
+            >
+              <ArrowDown className="h-4 w-4" />
+              Ir a frase final
+            </Button>
           </div>
           <p className="text-sm text-tierra-sombra">
             Concepto / materia → dimensiones y pautas. La nota agregada es juicio docente; la
@@ -610,7 +671,10 @@ export function StudentFormPage(): React.JSX.Element {
             })}
           </div>
 
-          <div className="space-y-2 rounded-lg border border-tierra-borde bg-tierra-arena/40 px-4 py-3">
+          <div
+            id="frase-final-section"
+            className="scroll-mt-6 space-y-2 rounded-lg border border-tierra-borde bg-tierra-arena/40 px-4 py-3"
+          >
             <div className="flex flex-wrap items-baseline gap-2">
               <Label htmlFor="frase-final">Frase final</Label>
               {currentPhrase?.phraseCode ? (
@@ -727,7 +791,10 @@ export function StudentFormPage(): React.JSX.Element {
             {phraseDisplay && currentPhrase?.phraseText ? (
               <p className="text-sm leading-relaxed text-tierra-sombra">{phraseDisplay}</p>
             ) : null}
-            {cierreMsg ? <p className="text-sm text-tierra-terracota">{cierreMsg}</p> : null}
+            {phraseError ? <p className="text-sm text-tierra-terracota">{phraseError}</p> : null}
+            {!phraseError && cierreHint ? (
+              <p className="text-sm text-tierra-sombra">{cierreHint}</p>
+            ) : null}
           </div>
         </section>
       ) : null}
