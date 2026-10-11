@@ -68,13 +68,13 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: ${{ github.ref_name }}
-          prerelease: ${{ steps.meta.outputs.prerelease }}
-          make_latest: ${{ steps.meta.outputs.make_latest }}
+          prerelease: ${{ steps.meta.outputs.prerelease == 'true' }}
+          make_latest: ${{ steps.meta.outputs.make_latest == 'true' }}
           generate_release_notes: true
           fail_on_unmatched_files: true
+          # Solo patrones que siempre existen tras Verify (blockmap es opcional)
           files: |
             dist/*.exe
             dist/*.yml
-            dist/*.blockmap
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
