@@ -29,8 +29,26 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Build Windows (sin publish de electron-builder)
+      - name: Build Windows
         run: pnpm run build && pnpm exec electron-builder --win --x64 --publish never
+
+      - name: Verify dist artifacts
+        shell: bash
+        run: |
+          echo "=== dist ==="
+          ls -la dist || true
+          shopt -s nullglob
+          exes=(dist/*.exe)
+          ymls=(dist/*.yml)
+          echo "exes: ${#exes[@]} ymls: ${#ymls[@]}"
+          if [[ ${#exes[@]} -lt 1 ]]; then
+            echo "ERROR: no hay .exe en dist/"
+            exit 1
+          fi
+          if [[ ${#ymls[@]} -lt 1 ]]; then
+            echo "ERROR: no hay .yml (latest/beta) en dist/"
+            exit 1
+          fi
 
       - name: Detect prerelease
         id: meta
@@ -39,8 +57,10 @@ jobs:
           TAG="${GITHUB_REF_NAME}"
           if [[ "$TAG" == *beta* || "$TAG" == *alpha* || "$TAG" == *rc* ]]; then
             echo "prerelease=true" >> "$GITHUB_OUTPUT"
+            echo "make_latest=false" >> "$GITHUB_OUTPUT"
           else
             echo "prerelease=false" >> "$GITHUB_OUTPUT"
+            echo "make_latest=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Upload GitHub Release
@@ -49,7 +69,9 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: ${{ github.ref_name }}
           prerelease: ${{ steps.meta.outputs.prerelease }}
+          make_latest: ${{ steps.meta.outputs.make_latest }}
           generate_release_notes: true
+          fail_on_unmatched_files: true
           files: |
             dist/*.exe
             dist/*.yml

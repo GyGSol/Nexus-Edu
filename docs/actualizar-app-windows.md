@@ -18,8 +18,8 @@ La **1.0.0** no tenía updater. Para probar el flujo completo:
 
 1. Cerrar Nexus-Edu.
 2. Descargar e instalar a mano la beta:  
-   [`nexus-edu-1.1.0-beta.1-setup.exe`](https://github.com/GyGSol/Nexus-Edu/releases/tag/v1.1.0-beta.1)  
-   (Release **prerelease** — no es “Latest”).
+   [`nexus-edu-1.1.0-beta.1-setup.exe`](https://github.com/GyGSol/Nexus-Edu/releases/download/v1.1.0-beta.1/nexus-edu-1.1.0-beta.1-setup.exe)  
+   (Release **prerelease** — no es “Latest”). Para Drive: subir ese archivo y compartir el link.
 3. Abrir la app: verificar que alumnos/notas siguen (BD en `%APPDATA%`).
 4. Sidebar → **Actualizar app**.
 5. Debe ofrecer bajar la estable **1.1.0**, descargar, reiniciar.
