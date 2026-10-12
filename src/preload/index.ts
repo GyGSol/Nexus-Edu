@@ -36,6 +36,16 @@ const api: IpcApi = {
   installUpdate: () => ipcRenderer.invoke('app:installUpdate'),
   backupDatabase: () => ipcRenderer.invoke('db:backup'),
   restoreDatabase: () => ipcRenderer.invoke('db:restore'),
+  sendDatabaseToUsb: () => ipcRenderer.invoke('usb:send'),
+  bringDatabaseFromUsb: () => ipcRenderer.invoke('usb:bring'),
+  updatePortableOnUsb: () => ipcRenderer.invoke('usb:updatePortable'),
+  listAppUsers: () => ipcRenderer.invoke('users:list'),
+  createAppUser: (input) => ipcRenderer.invoke('users:create', input),
+  updateAppUser: (id, input) => ipcRenderer.invoke('users:update', id, input),
+  deleteAppUser: (id) => ipcRenderer.invoke('users:delete', id),
+  authLogin: (username, password) => ipcRenderer.invoke('auth:login', username, password),
+  authLogout: () => ipcRenderer.invoke('auth:logout'),
+  authSession: () => ipcRenderer.invoke('auth:session'),
   exportBoletinHtml: (studentId: number, bimester: number) =>
     ipcRenderer.invoke('export:boletinHtml', studentId, bimester),
   printBoletin: (studentId: number, bimester: number) =>

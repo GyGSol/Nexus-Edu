@@ -11,9 +11,11 @@ Estado de creación en Jira: ver sección **Claves creadas** al final (se comple
 
 **Windows:** EDU-9 instalador + **EDU-22** / **EDU-25** auto-update validado (→ 1.1.0 / → 1.1.1, BD conservada; Release debe incluir `.blockmap`). Ver `docs/actualizar-app-windows.md`.
 
-**Abiertas (2):** EDU-1 (ancla producto) + **EDU-2 En curso intencional** = runbook vivo Cursor ↔ Jira (setup cumplido; no cerrar). Cola **Lista AGNT** vacía.
+**Abiertas:** EDU-1 (ancla producto) + **EDU-2 En curso intencional** = runbook vivo Cursor ↔ Jira. Cola **Lista AGNT** vacía.
 
 **Cierre 2026-10-12:** **EDU-25** Finalizada — icono C, banner update, smoke Win 1.1.0→1.1.1 (blockmap obligatorio en Release).
+
+**EDU-26 (2026-10-12):** spike/PoC Android **pausado por cliente** → **Por hacer**. Docs: `viabilidad-android-apk.md`, `poc-capacitor-android.md`. WIP branch `poc/capacitor-android` (no merge).
 
 **Limpieza opcional:** borrar EDU-3 en UI.
 
@@ -665,6 +667,77 @@ PUERTA: repo:si-aprobado
 
 ---
 
+## H19 — Viabilidad Android .apk
+
+**Tipo:** Story  
+**Labels:** `spike`, `android`, `mobile`, `plataforma`  
+**Clave:** [EDU-26](https://nexus-educacion.atlassian.net/browse/EDU-26)  
+**Estado:** Por hacer — **pausado por cliente** (2026-10-12); no implementar
+
+### Descripción humana
+
+Determinar si es viable llevar Nexus-Edu (Electron desktop) a un Android `.apk`, con qué enfoque y con qué bloqueantes del stack actual. Spike de investigación (no implementación APK).
+
+Criterios:
+
+- Doc corto de viabilidad en `docs/`
+- Resumen + fuentes NotebookLM en comentario Jira
+- Decisión: no viable | viable con rewrite parcial | viable con wrapper | aplazar
+
+```markdown
+## AGNT
+schema: agnt-v1
+OBJ: spike Android APK — pausado por cliente
+CTX: docs viabilidad+PoC; WIP branch poc/capacitor-android
+EVOL: 2026-10-12 cliente corta; Por hacer; no implementar
+ACT:
+- ninguno hasta reactivación explícita
+DEPS: decisión cliente
+NEXT: Por hacer
+SIG: pausa-cliente
+PUERTA: repo:no
+```
+
+---
+
+## H20 — Sync USB + login portable + admin users + actualizar EXE portable
+
+**Tipo:** Story  
+**Labels:** `datos`, `windows`, `portable`, `usb`, `auth`  
+**Clave:** [EDU-27](https://nexus-educacion.atlassian.net/browse/EDU-27)  
+**Estado:** RESPUESTA AGNT — implementado en repo; falta smoke Win  
+**Relacionada:** EDU-12, EDU-22
+
+### Descripción humana
+
+Como docente, quiero sync USB escritorio↔portable, **admin usuarios** en instalada, **login** en portable, y en casa **actualizar el EXE portable del USB** desde GitHub sin perder `data/`.
+
+Criterios:
+
+- Portable: BD junto al EXE + **login obligatorio** (sin auto-update en colegio)
+- Escritorio: CRUD usuarios (**sin** login) + **Enviar** / **Traer** + **Actualizar portable en USB**
+- Reset clave: instalada → Enviar USB
+- UI: badge `Instalada` vs `Portable`
+- Doc; sin `.sqlite` en GitHub; hash de contraseñas
+
+```markdown
+## AGNT
+schema: agnt-v1
+OBJ: sync USB; login portable; admin users instalada; update EXE portable desde casa; badge
+CTX: PORTABLE_EXECUTABLE_DIR; WAL; EDU-12; users+hash; Releases *-portable.exe
+EVOL: Lista AGNT→Plan+Puerta; RESPUESTA AGNT
+TIPO: feature
+PLAN: data+login; Enviar/Traer; CRUD users; download portable→USB; badge; doc
+ACT:
+- esperar aprobación Puerta de código
+DEPS: ok
+NEXT: RESPUESTA AGNT — aprobar o repreguntar
+SIG: hogar-colegio-usb-auth-portable-update
+PUERTA: repo:pendiente-aprobacion
+```
+
+---
+
 ## Claves creadas
 
 Board: https://nexus-educacion.atlassian.net/jira/software/projects/EDU/boards/1  
@@ -694,6 +767,8 @@ Creado 2026-10-11 vía MCP OAuth `atlassian-nexus-edu` (`gonzalomlopolito@gmail.
 | bug bimestre | EDU-23 | https://nexus-educacion.atlassian.net/browse/EDU-23 · Finalizada |
 | UX alumnos | EDU-24 | https://nexus-educacion.atlassian.net/browse/EDU-24 · Finalizada |
 | H18 | EDU-25 | https://nexus-educacion.atlassian.net/browse/EDU-25 · Finalizada |
+| H19 | EDU-26 | https://nexus-educacion.atlassian.net/browse/EDU-26 · Por hacer (pausado cliente) |
+| H20 | EDU-27 | https://nexus-educacion.atlassian.net/browse/EDU-27 · RESPUESTA AGNT (puerta) |
 
 Anclas del board:
 

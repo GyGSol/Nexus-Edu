@@ -4,9 +4,13 @@ import {
   CloudDownload,
   DatabaseBackup,
   GraduationCap,
+  HardDriveDownload,
+  HardDriveUpload,
   LayoutDashboard,
+  LogOut,
   RefreshCw,
   Upload,
+  UserCog,
   Users,
   X
 } from 'lucide-react'
@@ -15,7 +19,7 @@ import { Button } from '../ui/button'
 import { useEffect, useState } from 'react'
 import { StudentEditNavProvider, useStudentEditNav } from './StudentEditNavContext'
 
-const nav = [
+const baseNav = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/alumnos', label: 'Alumnos', icon: Users },
   { to: '/frases', label: 'Frases', icon: BookText }
@@ -33,9 +37,14 @@ function AppShellInner(): React.JSX.Element {
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
   const [appVersion, setAppVersion] = useState('')
+  const [appMode, setAppMode] = useState<'installed' | 'portable'>('installed')
   const [availableVersion, setAvailableVersion] = useState<string | null>(null)
   const [bannerDismissed, setBannerDismissed] = useState(false)
   const { editNav } = useStudentEditNav()
+  const isInstalled = appMode === 'installed'
+  const nav = isInstalled
+    ? [...baseNav, { to: '/usuarios', label: 'Usuarios', icon: UserCog }]
+    : baseNav
 
   useEffect(() => {
     let cancelled = false
@@ -43,7 +52,11 @@ function AppShellInner(): React.JSX.Element {
     async function loadVersionAndCheckUpdate(): Promise<void> {
       try {
         const info = await window.api.getAppInfo()
-        if (!cancelled) setAppVersion(info.version)
+        if (cancelled) return
+        setAppVersion(info.version)
+        setAppMode(info.mode)
+
+        if (info.mode !== 'installed') return
 
         const check = await window.api.checkForUpdate()
         if (cancelled) return
@@ -102,6 +115,54 @@ function AppShellInner(): React.JSX.Element {
     } finally {
       setBusy(false)
     }
+  }
+
+  async function handleUsbSend(): Promise<void> {
+    setBusy(true)
+    setMessage('')
+    try {
+      const result = await window.api.sendDatabaseToUsb()
+      setMessage(result.ok ? result.message || 'Base enviada' : result.message || 'Cancelado')
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : 'Error al enviar al USB')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function handleUsbBring(): Promise<void> {
+    setBusy(true)
+    setMessage('')
+    try {
+      const result = await window.api.bringDatabaseFromUsb()
+      if (!result.ok) setMessage(result.message || 'Cancelado')
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : 'Error al traer del USB')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function handlePortableUpdate(): Promise<void> {
+    setBusy(true)
+    setMessage('')
+    try {
+      const result = await window.api.updatePortableOnUsb()
+      setMessage(
+        result.ok
+          ? result.message || `Portable actualizado${result.version ? ` a v${result.version}` : ''}`
+          : result.message || 'Cancelado'
+      )
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : 'Error al actualizar portable')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function handleLogout(): Promise<void> {
+    await window.api.authLogout()
+    window.location.reload()
   }
 
   async function handleUpdate(): Promise<void> {
@@ -184,6 +245,16 @@ function AppShellInner(): React.JSX.Element {
             <div>
               <p className="font-display text-xl font-bold text-tierra-umbria">Nexus-Edu</p>
               <p className="text-xs text-tierra-sombra">Evaluación 1°C</p>
+              <p
+                className={cn(
+                  'mt-1 inline-block rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
+                  isInstalled
+                    ? 'bg-tierra-arena text-tierra-umbria'
+                    : 'bg-tierra-arcilla/20 text-tierra-terracota'
+                )}
+              >
+                {isInstalled ? 'Instalada' : 'Portable'}
+              </p>
             </div>
           </div>
           <nav className="flex flex-1 flex-col gap-1">
@@ -221,24 +292,65 @@ function AppShellInner(): React.JSX.Element {
             ))}
           </nav>
           <div className="mt-4 space-y-2 border-t border-tierra-borde pt-4">
-            <Button
-              variant="secondary"
-              className="w-full justify-start"
-              disabled={busy}
-              onClick={() => void handleUpdate()}
-            >
-              <CloudDownload className={cn('h-4 w-4', busy && 'animate-pulse')} />
-              Actualizar app
-            </Button>
-            <Button
-              variant="secondary"
-              className="w-full justify-start"
-              disabled={busy}
-              onClick={() => void handleImport()}
-            >
-              <RefreshCw className={cn('h-4 w-4', busy && 'animate-spin')} />
-              Reimportar Excel
-            </Button>
+            {isInstalled ? (
+              <>
+                <Button
+                  variant="secondary"
+                  className="w-full justify-start"
+                  disabled={busy}
+                  onClick={() => void handleUpdate()}
+                >
+                  <CloudDownload className={cn('h-4 w-4', busy && 'animate-pulse')} />
+                  Actualizar app
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="w-full justify-start"
+                  disabled={busy}
+                  onClick={() => void handleUsbSend()}
+                >
+                  <HardDriveUpload className="h-4 w-4" />
+                  Enviar base al USB
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="w-full justify-start"
+                  disabled={busy}
+                  onClick={() => void handleUsbBring()}
+                >
+                  <HardDriveDownload className="h-4 w-4" />
+                  Traer base del USB
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="w-full justify-start"
+                  disabled={busy}
+                  onClick={() => void handlePortableUpdate()}
+                >
+                  <CloudDownload className="h-4 w-4" />
+                  Actualizar portable USB
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="w-full justify-start"
+                  disabled={busy}
+                  onClick={() => void handleImport()}
+                >
+                  <RefreshCw className={cn('h-4 w-4', busy && 'animate-spin')} />
+                  Reimportar Excel
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="secondary"
+                className="w-full justify-start"
+                disabled={busy}
+                onClick={() => void handleLogout()}
+              >
+                <LogOut className="h-4 w-4" />
+                Cerrar sesión
+              </Button>
+            )}
             <Button
               variant="secondary"
               className="w-full justify-start"
@@ -259,7 +371,9 @@ function AppShellInner(): React.JSX.Element {
             </Button>
             {message ? <p className="text-xs text-tierra-sombra break-all">{message}</p> : null}
             {appVersion ? (
-              <p className="pt-1 text-center text-xs text-tierra-sombra/80">v{appVersion}</p>
+              <p className="pt-1 text-center text-xs text-tierra-sombra/80">
+                v{appVersion} · {isInstalled ? 'Instalada' : 'Portable'}
+              </p>
             ) : null}
           </div>
         </aside>

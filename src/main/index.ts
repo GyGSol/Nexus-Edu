@@ -1,10 +1,13 @@
 import { app, shell, BrowserWindow, session } from 'electron'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
+import { configureAppPaths, isPortableMode } from './app-mode'
 import { registerIpcHandlers } from './ipc/handlers'
 import { ensureSeeded } from './db/seed'
 import { closeDb } from './db/connection'
 import { initAutoUpdater } from './services/updater'
+
+configureAppPaths()
 
 const isDev = !app.isPackaged
 
@@ -69,7 +72,10 @@ app.whenReady().then(async () => {
   })
 
   registerIpcHandlers()
-  initAutoUpdater()
+  // Auto-update NSIS solo en instalada (no en portable del colegio)
+  if (!isPortableMode()) {
+    initAutoUpdater()
+  }
   await ensureSeeded()
   createWindow()
 

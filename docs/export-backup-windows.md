@@ -52,14 +52,29 @@ Sidebar:
 - **Respaldar base** → guarda copia `.sqlite` (checkpoint WAL)
 - **Restaurar base** → elige `.sqlite`, confirma y **reinicia** la app
 
-Ruta local típica:
+Ruta local típica (app **instalada**):
 
 | SO | `userData` |
 |----|------------|
 | Linux | `~/.config/nexus-edu/data/nexus-edu.sqlite` |
 | Windows | `%APPDATA%\nexus-edu\data\nexus-edu.sqlite` |
 
-Ver también en app: IPC `getAppInfo().dbPath`.
+Ver también en app: IPC `getAppInfo().dbPath` / `mode`.
+
+## USB escritorio ↔ portable (EDU-27)
+
+Solo en modo **Instalada** (casa):
+
+| Acción | Efecto |
+|--------|--------|
+| **Enviar base al USB** | Elige `*-portable.exe` del pendrive → copia SQLite a `data/` junto al EXE (incluye usuarios) |
+| **Traer base del USB** | Copia `data/nexus-edu.sqlite` del portable → AppData y reinicia |
+| **Actualizar portable USB** | Baja `*-portable.exe` de GitHub Releases Latest y reemplaza el EXE **sin borrar** `data/` |
+| **Usuarios** | CRUD de cuentas (sin login en instalada). Reset clave = editar aquí + Enviar |
+
+Modo **Portable** (colegio): badge Portable, **login obligatorio**, BD en carpeta `data/` junto al EXE (`PORTABLE_EXECUTABLE_DIR`). Sin auto-update del EXE en el colegio.
+
+Detalle: [analisis-portable-db-multi-pc.md](analisis-portable-db-multi-pc.md).
 
 ## Tests
 

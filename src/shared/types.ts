@@ -198,6 +198,13 @@ export interface AssessmentUpsertInput {
   grade: AssessmentMark | ''
 }
 
+export type AppUserDto = {
+  id: number
+  username: string
+  active: boolean
+  createdAt: string
+}
+
 export type IpcApi = {
   listStudents: (filters?: StudentListFilters) => Promise<StudentListResult>
   getStudent: (id: number) => Promise<Student | null>
@@ -213,7 +220,12 @@ export type IpcApi = {
   deletePhraseCatalogEntry: (code: string) => Promise<{ success: boolean }>
   getDashboardMetrics: (bimester?: number | null) => Promise<DashboardMetrics>
   importExcel: (mode: 'replace' | 'merge') => Promise<{ imported: number }>
-  getAppInfo: () => Promise<{ version: string; dbPath: string; packaged: boolean }>
+  getAppInfo: () => Promise<{
+    version: string
+    dbPath: string
+    packaged: boolean
+    mode: 'installed' | 'portable'
+  }>
   checkForUpdate: () => Promise<{
     ok: boolean
     status: 'available' | 'not-available' | 'dev' | 'error'
@@ -225,6 +237,24 @@ export type IpcApi = {
   installUpdate: () => Promise<{ ok: boolean; message?: string }>
   backupDatabase: () => Promise<{ ok: boolean; path?: string; message?: string }>
   restoreDatabase: () => Promise<{ ok: boolean; message?: string }>
+  sendDatabaseToUsb: () => Promise<{ ok: boolean; path?: string; message?: string }>
+  bringDatabaseFromUsb: () => Promise<{ ok: boolean; path?: string; message?: string }>
+  updatePortableOnUsb: () => Promise<{ ok: boolean; version?: string; message?: string }>
+  listAppUsers: () => Promise<AppUserDto[]>
+  createAppUser: (input: { username: string; password: string }) => Promise<AppUserDto>
+  updateAppUser: (
+    id: number,
+    input: { username?: string; password?: string; active?: boolean }
+  ) => Promise<AppUserDto>
+  deleteAppUser: (id: number) => Promise<{ success: boolean }>
+  authLogin: (username: string, password: string) => Promise<{ ok: boolean; user?: AppUserDto; message?: string }>
+  authLogout: () => Promise<{ ok: boolean }>
+  authSession: () => Promise<{
+    mode: 'installed' | 'portable'
+    requiresLogin: boolean
+    user: AppUserDto | null
+    activeUserCount: number
+  }>
   exportBoletinHtml: (
     studentId: number,
     bimester: number
