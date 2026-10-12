@@ -41,7 +41,7 @@ electron-vite, Electron, React 19, TypeScript 5, Tailwind 4 (paleta Tierra), Rea
 
 ## Docs canónicas
 
-- `docs/jira-workflow-edu.md` — estados AGNT (disparo: **Lista AGNT**) y JQL
+- `docs/jira-workflow-edu.md` — estados AGNT (disparo: **Lista AGNT** → Plan AGNT obligatorio) y JQL
 - `docs/jira-stories-backlog.md` — historias del backlog
 - `docs/notebooklm.md` — NotebookLM del proyecto (auth, MCP, sync fuentes)
 - JQL: `project = EDU AND status = "Lista AGNT" ORDER BY updated DESC`

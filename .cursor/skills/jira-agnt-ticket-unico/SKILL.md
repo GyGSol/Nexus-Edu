@@ -1,8 +1,9 @@
 ---
 name: jira-agnt-ticket-unico
 description: >-
-  Flujo ticket único AGNT para EDU: Resultado AGNT en comentario Jira (no solo
-  chat). Trigger: "revisar Jira", "Lista AGNT", EDU-NN.
+  Flujo ticket único AGNT para EDU: en Lista AGNT genera Plan AGNT
+  (fix/bug/mejora) y Resultado AGNT en comentario Jira (no solo chat).
+  Trigger: "revisar Jira", "Lista AGNT", "Listo para AGNT", EDU-NN.
 ---
 
 # Jira AGNT ticket único — Nexus-Edu
@@ -15,25 +16,52 @@ description: >-
 
 Ver `docs/jira-workflow-edu.md`.
 
-| Estado | Quién | ID (aprox.) |
-|--------|-------|-------------|
+| Estado | Quién | ID |
+|--------|-------|-----|
 | Por hacer | Humano | 10000 |
 | **Lista AGNT** | Humano dispara | 10002 |
 | En curso | Humano/dev | 10001 |
-| **RESPUESTA AGNT** | Agente tras Resultado AGNT | *crear en UI si falta* |
+| **RESPUESTA AGNT** | Agente tras Resultado AGNT | 10004 |
 | Finalizada | Humano cierra | 10003 |
 
-Nombre canónico del disparo en este board: **`Lista AGNT`** (no "Lista para AGNT").
+Nombre canónico del disparo en este board: **`Lista AGNT`**. Alias aceptados en prompts: "Lista para AGNT", "Listo para AGNT".
 
 ## Flujo
 
 1. JQL: `project = EDU AND status = "Lista AGNT" ORDER BY updated DESC`.
 2. Leer descripción + `## AGNT` + comentarios cronológicos.
 3. Priorizar **Pregunta AGNT** sin respuesta.
-4. Si requiere código: comentario **Puerta de codigo** + mención a @Gonzalo Lopolito; **no** implementar hasta aprobación.
-5. Si no requiere código: comentario **Resultado AGNT** completo.
-6. Transicionar a **RESPUESTA AGNT** si existe; si no, dejar el issue y pedir crear el estado (EDU-4 / UI).
-7. Actualizar bloque `## AGNT` (OBJ/EVOL/ACT/DEPS/NEXT).
+4. **Generar Plan AGNT** (obligatorio en Lista AGNT): clasificar tipo (fix / bug / mejora / pregunta / docs / otro) y proponer pasos concretos antes de pedir aprobación o cerrar análisis. Publicar el plan dentro del comentario Jira (sección `## Plan AGNT`); no dejarlo solo en el chat.
+5. Si requiere código: comentario **Puerta de codigo** (incluye el Plan AGNT) + mención a @Gonzalo Lopolito; **no** implementar hasta aprobación.
+6. Si no requiere código: comentario **Resultado AGNT** completo (incluye el Plan AGNT o "n/a — solo análisis").
+7. Transicionar a **RESPUESTA AGNT** (id 10004).
+8. Actualizar bloque `## AGNT` (OBJ/EVOL/ACT/PLAN/DEPS/NEXT) — skill `jira-agnt-bloque-descripcion`.
+
+## Plantilla Plan AGNT (obligatoria en Lista AGNT)
+
+Incluir siempre que el ticket esté en **Lista AGNT**, aunque el trabajo sea solo análisis.
+
+```markdown
+## Plan AGNT
+**Tipo:** fix | bug | mejora | pregunta | docs | otro
+**Objetivo:** <qué queda resuelto si el plan se cumple>
+**Alcance:**
+- In: …
+- Out: …
+**Pasos:**
+1. …
+2. …
+3. …
+**Zonas / archivos probables:**
+- `<ruta o módulo>`
+**Riesgos / tests:**
+- …
+**Criterio de hecho:**
+- …
+**Puerta de código:** no | pendiente-aprobacion | n/a
+```
+
+Adaptar los pasos al tipo: reproducción→causa→fix (bug), cambio acotado→validación (fix/mejora), respuestas + faltantes (pregunta), sync docs (docs).
 
 ## Plantilla Resultado AGNT
 
@@ -45,6 +73,9 @@ Nombre canónico del disparo en este board: **`Lista AGNT`** (no "Lista para AGN
 **Faltantes:** …
 **Recomendación:** …
 **Próximo paso:** …
+
+## Plan AGNT
+… (plantilla de arriba)
 ```
 
 ## Plantilla Puerta de codigo
@@ -58,8 +89,17 @@ No aplico cambios en el repo hasta decision explicita.
 Resumen del pedido interpretado:
 - <alcance>
 
-Archivos o zonas probablemente afectadas:
+## Plan AGNT
+Tipo: <fix|bug|mejora|…>
+Objetivo: <…>
+Pasos:
+1. …
+2. …
+Zonas / archivos probables:
 - <rutas>
+Criterio de hecho:
+- …
+Puerta de código: pendiente-aprobacion
 
 @Gonzalo Lopolito ¿Aprobamos seguir adelante con este cambio en el repo?
 ```

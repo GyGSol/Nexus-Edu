@@ -2,7 +2,8 @@
 name: jira-agnt-bloque-descripcion
 description: >-
   Mantiene el apartado ## AGNT al final de descripciones Jira EDU (briefing
-  denso para el agente). Usar al leer/crear/actualizar issues o tras intake.
+  denso + PLAN). Usar al leer/crear/actualizar issues, tras intake o en
+  Lista AGNT.
 ---
 
 # Jira — bloque AGNT (Nexus-Edu / EDU)
@@ -12,7 +13,7 @@ description: >-
 | Ubicación | Formato |
 |-----------|---------|
 | Descripción | Al **final**: encabezado exacto `## AGNT` |
-| Comentario | Solo si aporta alcance nuevo |
+| Comentario | Solo si aporta alcance nuevo; el **Plan AGNT** detallado va en comentario (skill `jira-agnt-ticket-unico`) |
 
 No pisar el texto humano encima del bloque. Si ya existe `## AGNT`, **reemplazar solo ese bloque**.
 
@@ -24,6 +25,8 @@ schema: agnt-v1
 OBJ: <objetivo comprimido>
 CTX: <contexto técnico mínimo>
 EVOL: <qué cambió en el hilo>
+TIPO: <fix|bug|mejora|pregunta|docs|otro>
+PLAN: <plan en 1 línea o bullets muy cortos; detalle en comentario Plan AGNT>
 ACT:
 - <acción recomendada 1>
 - <acción recomendada 2>
@@ -33,7 +36,7 @@ SIG: <señales del hilo>
 PUERTA: <repo:no | repo:pendiente-aprobacion | repo:si-aprobado>
 ```
 
-Español técnico abreviado. Sin secretos ni PII de alumnos.
+Tras **Lista AGNT**, `TIPO` y `PLAN` son obligatorios (aunque el plan completo viva en el comentario). Español técnico abreviado. Sin secretos ni PII de alumnos.
 
 ## Herramientas
 

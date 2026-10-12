@@ -18,18 +18,22 @@
 | Por hacer | new | 10000 | Humano | Backlog |
 | **Lista AGNT** | indeterminate | 10002 | Humano | Dispara al agente Cursor |
 | En curso | indeterminate | 10001 | Humano/dev | Implementación activa |
-| **RESPUESTA AGNT** | indeterminate | *pendiente UI (~2 min)* | Agente | Resultado en comentario — MCP no puede crearlo |
+| **RESPUESTA AGNT** | indeterminate | **10004** | Agente | Tras Resultado AGNT en comentario |
 | Finalizada | done | 10003 | Humano | Cerrado |
 
 Nombre canónico del disparo: **`Lista AGNT`** (así está en el board). Las skills usan ese nombre.
 
+Aplica a Epic / Story / Task / Subtask (mismos statusIds).
+
 ### Ciclo AGNT
 
-1. Humano → **Lista AGNT**
-2. Agente lee ticket + comentarios, publica **Resultado AGNT**, actualiza `## AGNT`
-3. Agente → **RESPUESTA AGNT** (cuando exista)
-4. Repregunta humana → volver a **Lista AGNT**
+1. Humano → **Lista AGNT** (alias en prompts: "Listo para AGNT" / "Lista para AGNT")
+2. Agente lee ticket + comentarios, **genera Plan AGNT** (tipo fix/bug/mejora/pregunta/docs + pasos, zonas, criterio de hecho), publica **Resultado AGNT** o **Puerta de codigo** (con el plan dentro), actualiza `## AGNT` (`TIPO` / `PLAN`)
+3. Agente → **RESPUESTA AGNT** (id 10004)
+4. Repregunta humana → volver a **Lista AGNT** (nuevo ciclo regenera/ajusta el plan)
 5. Validación → **Finalizada**
+
+El **Plan AGNT** es obligatorio al disparar desde Lista AGNT: no alcanza con un resumen en el chat; debe quedar en el comentario Jira (plantilla en skill `jira-agnt-ticket-unico`).
 
 JQL operativo:
 
@@ -37,23 +41,23 @@ JQL operativo:
 project = EDU AND status = "Lista AGNT" ORDER BY updated DESC
 ```
 
-## Crear RESPUESTA AGNT (manual, ~2 min) — pendiente
+## Cómo se creó RESPUESTA AGNT (team-managed)
 
-MCP no puede crear estados en este proyecto. En la UI:
+MCP **no** puede crear estados. En la UI (nombres nuevos: *espacio*, no *proyecto*):
 
-1. Abrir [board EDU](https://nexus-educacion.atlassian.net/jira/software/projects/EDU/boards/1)
-2. **Project settings** → **Work types** / Editar flujo (Tarea e Historia)
-3. **Add status** → nombre exacto: `RESPUESTA AGNT` (categoría In Progress)
-4. Transiciones: `Lista AGNT` → `RESPUESTA AGNT` → `Lista AGNT` (repregunta) y hacia Finalizada
-5. Publicar workflow y mostrar columna en el board
-6. Avisar al agente para actualizar IDs en esta doc (`listJiraStatuses`)
+1. Board EDU → **+** a la derecha de las columnas → columna `RESPUESTA AGNT` (categoría En curso), **o**
+2. **•••** junto a Nexus-Edu → **Configuración del espacio** → Tipos de trabajo → Editar flujo
 
-Opcional: renombrar `Lista AGNT` → `Lista para AGNT` solo si se actualizan skills/docs a la vez.
+Ruta documentada: columna creada 2026-10-11; id verificado con `listJiraStatuses` → **10004**.
 
 ## Skills
 
 - `.cursor/skills/jira-agnt-ticket-unico`
 - `.cursor/skills/jira-agnt-bloque-descripcion`
 - `.cursor/skills/jira-ticket-intake`
+
+## Runbook vivo
+
+[EDU-2](https://nexus-educacion.atlassian.net/browse/EDU-2) permanece **En curso** a propósito (decisión 2026-10-11): guía operativa Cursor ↔ Jira. No pasar a Finalizada aunque el setup esté cumplido; actualizar su descripción si cambian estados, skills o MCP.
 
 Backlog: [jira-stories-backlog.md](jira-stories-backlog.md).

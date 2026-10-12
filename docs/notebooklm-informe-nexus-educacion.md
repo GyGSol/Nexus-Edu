@@ -40,7 +40,7 @@ El proyecto cuenta con una integración avanzada de herramientas de automatizaci
 
 * **Jira EDU & Board:** Vinculado al proyecto **EDU** en Atlassian (`[suspicious link removed]`, cloudId `c51efaad-12f4-4cac-88b4-4abfa3cabd81`) [1, 18, 21].
 * **Workflow AGNT:**
-  * **Estados configurados en el tablero:** *Por hacer* (10000), *Lista AGNT* (10002, disparador para que el agente Cursor tome el ticket), *En curso* (10001), *RESPUESTA AGNT* (estado en UI para publicar la resolución en comentarios) y *Finalizada* (10003) [1, 18, 22].
+  * **Estados configurados en el tablero:** *Por hacer* (10000), *Lista AGNT* (10002, disparador para que el agente Cursor tome el ticket), *En curso* (10001), *RESPUESTA AGNT* (10004, post Resultado AGNT) y *Finalizada* (10003) [1, 18, 22].
   * **Estructura `## AGNT`:** Cada ticket incluye un bloque estandarizado en la descripción (`schema: agnt-v1`) con las claves `OBJ`, `CTX`, `EVOL`, `ACT`, `DEPS`, `NEXT`, `SIG` y `PUERTA` para mantener el contexto denso del agente [23-25].
 * **Backlog de Historias de Usuario:**
   * `EDU-SETUP` / `EDU-4`: Alineación del workflow AGNT [1, 26].
@@ -110,7 +110,7 @@ Las 52 fuentes presentes en el cuaderno se agrupan en dos categorías principale
 ---
 
 ### 7. Huecos o Próximos Pasos Evidentes
-1. **Creación del estado `RESPUESTA AGNT` en Jira:** MCP no puede crear estados del workflow en tableros team-managed; se requiere que un usuario cree manualmente la columna/estado `RESPUESTA AGNT` en la UI de Atlassian [22, 23, 77].
+1. **Estado `RESPUESTA AGNT` (id 10004):** creado en UI 2026-10-11 (MCP no puede crear estados en team-managed). Ciclo operativo: Lista AGNT → Resultado AGNT → RESPUESTA AGNT → Finalizada [22, 23, 77].
 2. **Exportación de Boletines y Reportes (H7 / EDU-11):** Es una funcionalidad pendiente en el backlog futuro. Falta definir con los docentes el formato de salida (PDF o Excel) y la maquetación del boletín [27, 78].
 3. **Backup y Restauración de SQLite (H8 / EDU-12):** Pendiente implementar un mecanismo visual para importar/exportar la base de datos física almacenada en `userData` [28, 79].
 4. **Validación del Pipeline de Empaquetado Linux (H5 / EDU-9):** Probar el comando `pnpm dist` en un entorno CI/CD local para verificar la generación correcta de ejecutables AppImage/deb [17, 80].
