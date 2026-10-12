@@ -70,8 +70,10 @@ Requisitos: Internet; repo [GyGSol/Nexus-Edu](https://github.com/GyGSol/Nexus-Ed
    - Beta de prueba: `1.2.0-beta.1` → prerelease + `beta.yml` (no pisa Latest)
 2. Commit + push a `main`.
 3. Tag: `git tag v1.2.0 && git push origin v1.2.0` (o `v1.2.0-beta.1`).
-4. GitHub Actions (`.github/workflows/release-windows.yml`) publica setup / portable / yml.
+4. GitHub Actions (`.github/workflows/release-windows.yml`) publica setup / portable / yml / **`.blockmap`**.
 5. En PC: instalar beta a mano para probar, o **Actualizar app** desde una versión anterior.
+
+Sin el `.blockmap` del `*-setup.exe` en el Release, **Actualizar app** en Windows suele fallar (electron-updater). Verificar que Latest tenga `nexus-edu-X.Y.Z-setup.exe.blockmap`.
 
 Publicación local (opcional, `GH_TOKEN` con `repo`):
 

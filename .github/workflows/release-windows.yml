@@ -40,13 +40,20 @@ jobs:
           shopt -s nullglob
           exes=(dist/*.exe)
           ymls=(dist/*.yml)
-          echo "exes: ${#exes[@]} ymls: ${#ymls[@]}"
+          # electron-updater necesita el blockmap del setup NSIS (p. ej. *-setup.exe.blockmap)
+          blockmaps=(dist/*.blockmap)
+          echo "exes: ${#exes[@]} ymls: ${#ymls[@]} blockmaps: ${#blockmaps[@]}"
+          ls -la dist/*.exe dist/*.yml dist/*.blockmap 2>/dev/null || true
           if [[ ${#exes[@]} -lt 1 ]]; then
             echo "ERROR: no hay .exe en dist/"
             exit 1
           fi
           if [[ ${#ymls[@]} -lt 1 ]]; then
             echo "ERROR: no hay .yml (latest/beta) en dist/"
+            exit 1
+          fi
+          if [[ ${#blockmaps[@]} -lt 1 ]]; then
+            echo "ERROR: no hay .blockmap en dist/ (auto-update Win falla sin ellos)"
             exit 1
           fi
 
@@ -79,10 +86,10 @@ jobs:
           else
             LATEST_FLAG="--latest"
           fi
-          # Lista explícita (más fiable que globs en Windows)
-          mapfile -t FILES < <(ls dist/*.exe dist/*.yml 2>/dev/null)
+          # exe + yml + blockmap (sin blockmap, Actualizar app en Win falla)
+          mapfile -t FILES < <(ls dist/*.exe dist/*.yml dist/*.blockmap 2>/dev/null)
           echo "Subiendo: ${FILES[*]}"
-          test "${#FILES[@]}" -ge 2
+          test "${#FILES[@]}" -ge 3
           gh release create "$TAG" "${FILES[@]}" \
             --title "$TAG" \
             --generate-notes \
