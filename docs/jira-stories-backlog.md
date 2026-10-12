@@ -5,13 +5,15 @@ Crear en Jira como **Story** (o **Task** si Story no existe). Cada descripción 
 
 Estado de creación en Jira: ver sección **Claves creadas** al final (se completa tras MCP).
 
-### Cierre AGNT 2026-10-11
+### Cierre AGNT 2026-10-11 (sync board)
 
-**Finalizada:** EDU-5…EDU-8, EDU-9…EDU-20 (incl. H13/H14), EDU-22 (H17 update), EDU-3 (obsoleta).
+**Finalizada (22):** EDU-3 (obsoleta), EDU-4…EDU-24 — incluye MVP, NotebookLM, frases/dimensiones, bugs (EDU-21/23), UX alumnos (EDU-24), auto-update (EDU-22). **RESPUESTA AGNT** = id **10004**.
 
 **Windows:** EDU-9 instalador + **EDU-22** auto-update validado (beta → 1.1.0, BD conservada). Ver `docs/actualizar-app-windows.md`.
 
-**Abiertas:** EDU-1 / EDU-2 (madre, En curso); EDU-4 (falta crear estado **RESPUESTA AGNT** en UI — MCP no puede). EDU-3: borrar en UI si aún aparece.
+**Abiertas (3):** EDU-1 (ancla producto) + **EDU-2 En curso intencional** = runbook vivo Cursor ↔ Jira (setup cumplido; no cerrar) + **EDU-25** mejoras de aspecto + smoke 1.1.1. Cola **Lista AGNT** vacía.
+
+**Limpieza opcional:** borrar EDU-3 en UI.
 
 ---
 
@@ -22,26 +24,25 @@ Estado de creación en Jira: ver sección **Claves creadas** al final (se comple
 
 ### Descripción humana
 
-Alinear workflow AGNT: disparo **Lista AGNT** (ya existe), crear **RESPUESTA AGNT** en UI, skills/docs con JQL correcto, MCP `atlassian-nexus-edu`.
+Alinear workflow AGNT: disparo **Lista AGNT** (10002), respuesta **RESPUESTA AGNT** (10004), skills/docs con JQL correcto, MCP `atlassian-nexus-edu`.
 
-Criterios:
+Criterios (cumplidos 2026-10-11):
 
 - Skills usan `status = "Lista AGNT"`
-- Estado **RESPUESTA AGNT** en board + transiciones
+- Estado **RESPUESTA AGNT** en board (id 10004) + columna visible
 - Doc `docs/jira-workflow-edu.md` con IDs reales
 
 ```markdown
 ## AGNT
 schema: agnt-v1
 OBJ: estados AGNT operativos en EDU
-CTX: team-managed; Lista AGNT id 10002 ya existe
-EVOL: skills/docs alineados a Lista AGNT; falta RESPUESTA AGNT en UI
+CTX: team-managed; Lista AGNT=10002; RESPUESTA AGNT=10004; Por hacer=10000; En curso=10001; Finalizada=10003
+EVOL: columna RESPUESTA AGNT creada en UI; docs/skills/IDs actualizados
 ACT:
-- humano crea RESPUESTA AGNT en Project settings
-- agente verifica listJiraStatuses + smoke transition
-DEPS: faltante:estado-RESPUESTA-AGNT
-NEXT: tras crear estado, smoke y Finalizada
-SIG: setup
+- agente smoke transition + Finalizada EDU-4
+DEPS: —
+NEXT: ciclo AGNT operativo (Lista → Resultado → RESPUESTA → Finalizada)
+SIG: setup-ok
 PUERTA: repo:no
 ```
 
@@ -626,6 +627,43 @@ PUERTA: repo:si-aprobado
 
 ---
 
+## H18 — Icono Windows + aviso de versión + release 1.1.1
+
+**Tipo:** Story  
+**Labels:** `ui`, `release`, `windows`, `polish`  
+**Clave:** [EDU-25](https://nexus-educacion.atlassian.net/browse/EDU-25)  
+**Relacionada:** EDU-22, EDU-24, EDU-9  
+**Estado:** En curso (implementación 2026-10-12; pendiente tag/smoke)
+
+### Descripción humana
+
+Como docente, quiero un icono de escritorio acorde a evaluación, ver la versión instalada y enterarme si hay update, y poder pasar de **1.1.0** a **1.1.1** sin perder datos.
+
+Criterios:
+
+- Icono C (escuela moderna + check) en `build/icon.ico` / PNG
+- Sidebar: `vX.Y.Z`; al arrancar consulta update; cartel **Nueva versión disponible** (`vA → vB`) + **Actualizar**
+- Release `v1.1.1` (NSIS) + bump
+- Smoke Win: 1.1.0 → cartel o **Actualizar app** → 1.1.1; BD intacta
+- Doc: `docs/actualizar-app-windows.md`
+
+```markdown
+## AGNT
+schema: agnt-v1
+OBJ: icono Win C + banner update + v en sidebar + release 1.1.1
+CTX: AppShell; build/icon.ico; electron-updater; package.json 1.1.1
+EVOL: alcance acotado; icono C; UI update banner implementada; falta tag+smoke
+ACT:
+- commit + tag v1.1.1 tras OK usuario
+- smoke Win 1.1.0→1.1.1
+DEPS: aprobación tag
+NEXT: tag release + smoke
+SIG: icon;update-banner;release-1.1.1
+PUERTA: repo:si-aprobado
+```
+
+---
+
 ## Claves creadas
 
 Board: https://nexus-educacion.atlassian.net/jira/software/projects/EDU/boards/1  
@@ -633,15 +671,15 @@ Creado 2026-10-11 vía MCP OAuth `atlassian-nexus-edu` (`gonzalomlopolito@gmail.
 
 | ID local | Clave Jira | Enlace |
 |----------|------------|--------|
-| EDU-SETUP | EDU-4 | https://nexus-educacion.atlassian.net/browse/EDU-4 |
+| EDU-SETUP | EDU-4 | https://nexus-educacion.atlassian.net/browse/EDU-4 · Finalizada |
 | H1 | EDU-5 | https://nexus-educacion.atlassian.net/browse/EDU-5 · Finalizada |
 | H2 | EDU-6 | https://nexus-educacion.atlassian.net/browse/EDU-6 · Finalizada |
 | H3 | EDU-7 | https://nexus-educacion.atlassian.net/browse/EDU-7 · Finalizada |
 | H4 | EDU-8 | https://nexus-educacion.atlassian.net/browse/EDU-8 · Finalizada |
-| H5 | EDU-9 | https://nexus-educacion.atlassian.net/browse/EDU-9 |
-| H6 | EDU-10 | https://nexus-educacion.atlassian.net/browse/EDU-10 |
-| H7 | EDU-11 | https://nexus-educacion.atlassian.net/browse/EDU-11 |
-| H8 | EDU-12 | https://nexus-educacion.atlassian.net/browse/EDU-12 |
+| H5 | EDU-9 | https://nexus-educacion.atlassian.net/browse/EDU-9 · Finalizada |
+| H6 | EDU-10 | https://nexus-educacion.atlassian.net/browse/EDU-10 · Finalizada |
+| H7 | EDU-11 | https://nexus-educacion.atlassian.net/browse/EDU-11 · Finalizada |
+| H8 | EDU-12 | https://nexus-educacion.atlassian.net/browse/EDU-12 · Finalizada |
 | H9 | EDU-13 | https://nexus-educacion.atlassian.net/browse/EDU-13 · Finalizada |
 | H10 | EDU-14 | https://nexus-educacion.atlassian.net/browse/EDU-14 · Finalizada |
 | H11 | EDU-15 | https://nexus-educacion.atlassian.net/browse/EDU-15 · Finalizada |
@@ -651,11 +689,15 @@ Creado 2026-10-11 vía MCP OAuth `atlassian-nexus-edu` (`gonzalomlopolito@gmail.
 | H15 | EDU-17 | https://nexus-educacion.atlassian.net/browse/EDU-17 · Finalizada |
 | H16 | EDU-18 | https://nexus-educacion.atlassian.net/browse/EDU-18 · Finalizada |
 | H17 | EDU-22 | https://nexus-educacion.atlassian.net/browse/EDU-22 · Finalizada |
+| bug frase | EDU-21 | https://nexus-educacion.atlassian.net/browse/EDU-21 · Finalizada |
+| bug bimestre | EDU-23 | https://nexus-educacion.atlassian.net/browse/EDU-23 · Finalizada |
+| UX alumnos | EDU-24 | https://nexus-educacion.atlassian.net/browse/EDU-24 · Finalizada |
+| H18 | EDU-25 | https://nexus-educacion.atlassian.net/browse/EDU-25 · En curso (icon+banner; falta tag) |
 
 Anclas del board:
 
 | Clave | Rol |
 |-------|-----|
-| [EDU-1](https://nexus-educacion.atlassian.net/browse/EDU-1) | Historia principal del producto Nexus-Edu |
-| [EDU-2](https://nexus-educacion.atlassian.net/browse/EDU-2) | Pasos, implementación, skills/rules y reglas Cursor ↔ Jira |
-| EDU-3 | Subtarea plantilla (revisar/limpiar si no aplica) |
+| [EDU-1](https://nexus-educacion.atlassian.net/browse/EDU-1) | Historia principal (En curso — ancla producto) |
+| [EDU-2](https://nexus-educacion.atlassian.net/browse/EDU-2) | Runbook vivo Cursor ↔ Jira (**En curso** intencional; no cerrar) |
+| EDU-3 | [OBSOLETO] Finalizada — borrar en UI si molesta |

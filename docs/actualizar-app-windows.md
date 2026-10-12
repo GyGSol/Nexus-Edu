@@ -12,7 +12,9 @@ Actualizar (menú o instalador nuevo) **reemplaza solo los archivos de la app**.
 
 Antes de cualquier update importante: sidebar → **Respaldar base**.
 
-## Smoke validado (2026-10-11)
+## Smoke validado
+
+### 2026-10-11 (EDU-22)
 
 En PC Windows de prueba:
 
@@ -21,6 +23,14 @@ En PC Windows de prueba:
 3. **La base de datos se conservó** (alumnos/notas intactos en `%APPDATA%\nexus-edu\data\`).
 
 Ticket: [EDU-22](https://nexus-educacion.atlassian.net/browse/EDU-22) Finalizada.
+
+### Objetivo 1.1.0 → 1.1.1 (EDU-25)
+
+1. Partir de **1.1.0** NSIS instalada.
+2. Publicar release `v1.1.1` (icono nuevo + aviso de actualización en app).
+3. En la PC: abrir app → cartel **Nueva versión disponible** (`v1.1.0 → v1.1.1`) o sidebar **Actualizar app**.
+4. Tras reinicio: versión **1.1.1**, icono de escritorio nuevo, BD intacta.
+5. Sidebar muestra `v1.1.1` en el pie.
 
 ## Probar el botón Actualizar (repetible)
 
@@ -40,9 +50,10 @@ Si SmartScreen avisa: *Más información* → *Ejecutar de todas formas*.
 ## Uso habitual (ya en 1.1.0+)
 
 1. Abrir Nexus-Edu (instalador NSIS, no el portable suelto).
-2. Sidebar → **Actualizar app**.
-3. Si hay versión nueva: descarga → reinicia sola.
-4. Si ya está al día: mensaje “Ya tenés la última versión…”.
+2. Desde **1.1.1**: al abrir, la app consulta sola si hay versión nueva. Si hay, aparece un cartel arriba (**Nueva versión disponible** / `vX → vY` / **Actualizar**).
+3. También: sidebar → **Actualizar app** (mismo flujo).
+4. La versión instalada se ve en el pie del sidebar (`v1.1.1`).
+5. Si ya está al día: mensaje “Ya tenés la última versión…”.
 
 Requisitos: Internet; repo [GyGSol/Nexus-Edu](https://github.com/GyGSol/Nexus-Edu) **público** (para leer `latest.yml` sin token en la app).
 
