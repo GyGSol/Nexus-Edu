@@ -16,7 +16,7 @@ Casa (NSIS)  --Enviar base-->  USB (portable.exe + data/)  --colegio-->  editar 
 | Paso | Dónde | Acción |
 |------|--------|--------|
 | 1 | Casa | App **instalada** + USB con `*-portable.exe` conectado |
-| 2 | Escritorio | **Admin usuarios** + **Enviar base al USB** (+ opcional **Actualizar portable en USB** desde GitHub Releases, preservando `data/`) |
+| 2 | Escritorio | **Admin usuarios** + **Enviar base al USB** (carpeta-paquete: EXE + `data/` + LEEME; descarga EXE si falta) |
 | 3 | Colegio | Abrir **portable** → **login obligatorio** → editar (sin auto-update del EXE) |
 | 4 | Casa | **Traer base del USB** |
 | 5 | UI | Badge **Instalada** vs **Portable** |

@@ -63,16 +63,26 @@ Ver también en app: IPC `getAppInfo().dbPath` / `mode`.
 
 ## USB escritorio ↔ portable (EDU-27)
 
+El portable **no** va como `.exe` suelto: va en una **carpeta-paquete** en el pendrive:
+
+```
+Nexus-Edu-Portable/
+  nexus-edu-*-portable.exe
+  data/
+    nexus-edu.sqlite
+  LEEME.txt
+```
+
 Solo en modo **Instalada** (casa):
 
 | Acción | Efecto |
 |--------|--------|
-| **Enviar base al USB** | Elige `*-portable.exe` del pendrive → copia SQLite a `data/` junto al EXE (incluye usuarios) |
-| **Traer base del USB** | Copia `data/nexus-edu.sqlite` del portable → AppData y reinicia |
-| **Actualizar portable USB** | Baja `*-portable.exe` de GitHub Releases Latest y reemplaza el EXE **sin borrar** `data/` |
-| **Usuarios** | CRUD de cuentas (sin login en instalada). Reset clave = editar aquí + Enviar |
+| **Enviar base al USB** | Elegís/creás la **carpeta** del paquete. Si no hay EXE, lo descarga de Releases. Escribe `data/` + `LEEME.txt` |
+| **Traer base del USB** | Elegís la misma carpeta → copia `data/nexus-edu.sqlite` → AppData y reinicia |
+| **Actualizar portable USB** | Elegís la carpeta → reemplaza el EXE **sin borrar** `data/` |
+| **Usuarios** | CRUD (sin login en instalada). Reset clave = editar + Enviar |
 
-Modo **Portable** (colegio): badge Portable, **login obligatorio**, BD en carpeta `data/` junto al EXE (`PORTABLE_EXECUTABLE_DIR`). Sin auto-update del EXE en el colegio.
+Modo **Portable** (colegio): ejecutá el `.exe` **desde esa carpeta**; badge Portable; **login** obligatorio. Sin auto-update en el colegio.
 
 Detalle: [analisis-portable-db-multi-pc.md](analisis-portable-db-multi-pc.md).
 
