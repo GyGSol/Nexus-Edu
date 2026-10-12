@@ -7,11 +7,13 @@ Estado de creación en Jira: ver sección **Claves creadas** al final (se comple
 
 ### Cierre AGNT 2026-10-11 (sync board)
 
-**Finalizada (22):** EDU-3 (obsoleta), EDU-4…EDU-24 — incluye MVP, NotebookLM, frases/dimensiones, bugs (EDU-21/23), UX alumnos (EDU-24), auto-update (EDU-22). **RESPUESTA AGNT** = id **10004**.
+**Finalizada (23):** EDU-3 (obsoleta), EDU-4…EDU-25 — incluye MVP, NotebookLM, frases/dimensiones, bugs (EDU-21/23), UX alumnos (EDU-24), auto-update (EDU-22), icono+banner+1.1.1 (EDU-25). **RESPUESTA AGNT** = id **10004**.
 
-**Windows:** EDU-9 instalador + **EDU-22** auto-update validado (beta → 1.1.0, BD conservada). Ver `docs/actualizar-app-windows.md`.
+**Windows:** EDU-9 instalador + **EDU-22** / **EDU-25** auto-update validado (→ 1.1.0 / → 1.1.1, BD conservada; Release debe incluir `.blockmap`). Ver `docs/actualizar-app-windows.md`.
 
-**Abiertas (3):** EDU-1 (ancla producto) + **EDU-2 En curso intencional** = runbook vivo Cursor ↔ Jira (setup cumplido; no cerrar) + **EDU-25** mejoras de aspecto + smoke 1.1.1. Cola **Lista AGNT** vacía.
+**Abiertas (2):** EDU-1 (ancla producto) + **EDU-2 En curso intencional** = runbook vivo Cursor ↔ Jira (setup cumplido; no cerrar). Cola **Lista AGNT** vacía.
+
+**Cierre 2026-10-12:** **EDU-25** Finalizada — icono C, banner update, smoke Win 1.1.0→1.1.1 (blockmap obligatorio en Release).
 
 **Limpieza opcional:** borrar EDU-3 en UI.
 
@@ -633,32 +635,31 @@ PUERTA: repo:si-aprobado
 **Labels:** `ui`, `release`, `windows`, `polish`  
 **Clave:** [EDU-25](https://nexus-educacion.atlassian.net/browse/EDU-25)  
 **Relacionada:** EDU-22, EDU-24, EDU-9  
-**Estado:** En curso (implementación 2026-10-12; pendiente tag/smoke)
+**Estado:** Finalizada (smoke Win OK 2026-10-12)
 
 ### Descripción humana
 
 Como docente, quiero un icono de escritorio acorde a evaluación, ver la versión instalada y enterarme si hay update, y poder pasar de **1.1.0** a **1.1.1** sin perder datos.
 
-Criterios:
+Criterios (entregados y validados):
 
-- Icono C (escuela moderna + check) en `build/icon.ico` / PNG
-- Sidebar: `vX.Y.Z`; al arrancar consulta update; cartel **Nueva versión disponible** (`vA → vB`) + **Actualizar**
-- Release `v1.1.1` (NSIS) + bump
-- Smoke Win: 1.1.0 → cartel o **Actualizar app** → 1.1.1; BD intacta
-- Doc: `docs/actualizar-app-windows.md`
+- Icono C en `build/icon.ico` / PNG
+- Sidebar `vX.Y.Z`; cartel **Nueva versión disponible** al arrancar
+- Release `v1.1.1` con **`.blockmap`** (sin blockmap el update Win falla)
+- Smoke Win OK: 1.1.0 → Actualizar → 1.1.1; BD intacta
+- Docs: `actualizar-app-windows.md`, `export-backup-windows.md`
 
 ```markdown
 ## AGNT
 schema: agnt-v1
-OBJ: icono Win C + banner update + v en sidebar + release 1.1.1
-CTX: AppShell; build/icon.ico; electron-updater; package.json 1.1.1
-EVOL: alcance acotado; icono C; UI update banner implementada; falta tag+smoke
+OBJ: icono Win C + banner update + release 1.1.1
+CTX: AppShell; build/icon.ico; workflow blockmap; electron-updater
+EVOL: smoke Win OK 2026-10-12; blockmap fix bea93d2; Finalizada
 ACT:
-- commit + tag v1.1.1 tras OK usuario
-- smoke Win 1.1.0→1.1.1
-DEPS: aprobación tag
-NEXT: tag release + smoke
-SIG: icon;update-banner;release-1.1.1
+- ninguno (cerrado)
+DEPS: ok
+NEXT: done
+SIG: icon-C;update-banner;blockmap;Finalizada
 PUERTA: repo:si-aprobado
 ```
 
@@ -692,7 +693,7 @@ Creado 2026-10-11 vía MCP OAuth `atlassian-nexus-edu` (`gonzalomlopolito@gmail.
 | bug frase | EDU-21 | https://nexus-educacion.atlassian.net/browse/EDU-21 · Finalizada |
 | bug bimestre | EDU-23 | https://nexus-educacion.atlassian.net/browse/EDU-23 · Finalizada |
 | UX alumnos | EDU-24 | https://nexus-educacion.atlassian.net/browse/EDU-24 · Finalizada |
-| H18 | EDU-25 | https://nexus-educacion.atlassian.net/browse/EDU-25 · En curso (icon+banner; falta tag) |
+| H18 | EDU-25 | https://nexus-educacion.atlassian.net/browse/EDU-25 · Finalizada |
 
 Anclas del board:
 

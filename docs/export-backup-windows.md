@@ -2,14 +2,15 @@
 
 Guía rápida para probar Nexus-Edu en Windows (EDU-9 / EDU-11 / EDU-12).
 
-## Estado (2026-10-11)
+## Estado (2026-10-12)
 
 | Paso | Estado |
 |------|--------|
-| Build Windows (GitHub Actions / tag `v*`) | OK |
-| Canal actualización in-app (EDU-22) | **OK** — ver [actualizar-app-windows.md](actualizar-app-windows.md) |
+| Build Windows (GitHub Actions / tag `v*`) | OK — release debe incluir `*-setup.exe.blockmap` |
+| Canal actualización in-app (EDU-22 / EDU-25) | **OK** — ver [actualizar-app-windows.md](actualizar-app-windows.md) |
 | Smoke Win: beta → Actualizar → 1.1.0 | **OK** — BD conservada |
-| Instalación en PC Windows | En **1.1.0** tras update |
+| Smoke Win: 1.1.0 → Actualizar → 1.1.1 | **OK** — BD conservada; icono nuevo (EDU-25) |
+| Instalación en PC Windows | En **1.1.1** tras update |
 
 La BD está en `%APPDATA%\nexus-edu\data\` y **no** se borra al actualizar (validado en smoke).
 

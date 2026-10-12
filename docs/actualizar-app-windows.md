@@ -1,6 +1,6 @@
 # Actualizar Nexus-Edu en Windows (sin perder la base)
 
-Guía para docentes y para quien publica versiones. Relacionado: [EDU-22](https://nexus-educacion.atlassian.net/browse/EDU-22).
+Guía para docentes y para quien publica versiones. Relacionado: [EDU-22](https://nexus-educacion.atlassian.net/browse/EDU-22), [EDU-25](https://nexus-educacion.atlassian.net/browse/EDU-25).
 
 ## Dónde está la base de datos
 
@@ -24,13 +24,15 @@ En PC Windows de prueba:
 
 Ticket: [EDU-22](https://nexus-educacion.atlassian.net/browse/EDU-22) Finalizada.
 
-### Objetivo 1.1.0 → 1.1.1 (EDU-25)
+### 2026-10-12 (EDU-25) — **OK**
+
+En PC Windows de prueba:
 
 1. Partir de **1.1.0** NSIS instalada.
-2. Publicar release `v1.1.1` (icono nuevo + aviso de actualización en app).
-3. En la PC: abrir app → cartel **Nueva versión disponible** (`v1.1.0 → v1.1.1`) o sidebar **Actualizar app**.
-4. Tras reinicio: versión **1.1.1**, icono de escritorio nuevo, BD intacta.
-5. Sidebar muestra `v1.1.1` en el pie.
+2. Release `v1.1.1` (icono C, banner de update, `v` en sidebar). Primera publicación sin `.blockmap` → Actualizar fallaba; republicado con blockmap (`bea93d2`).
+3. **Actualizar app** (o cartel) → **1.1.1**; BD conservada; icono nuevo.
+
+Ticket: [EDU-25](https://nexus-educacion.atlassian.net/browse/EDU-25) Finalizada.
 
 ## Probar el botón Actualizar (repetible)
 
